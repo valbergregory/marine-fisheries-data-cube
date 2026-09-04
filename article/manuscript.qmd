@@ -1,0 +1,104 @@
+---
+title: "Marine Heatwaves, Ocean Productivity and Fishing Effort: High-Frequency Evidence from the Brazilian Coast"
+author:
+  - name: "Valber Gregory"
+    email: valber.gregory@gmail.com
+date: last-modified
+format:
+  html:
+    toc: true
+  pdf:
+    documentclass: article
+bibliography: references.bib
+execute:
+  echo: false
+  warning: false
+---
+
+<!--
+DRAFT SKELETON — no results exist yet. Every empirical statement below is a
+placeholder marked [RESULT TO BE GENERATED]. Numbers, tables and figures are
+produced exclusively by the targets pipeline; nothing is pasted manually.
+Language remains ASSOCIATIONAL until the identification strategy is defended
+(docs/identification_strategy.md).
+-->
+
+# Introduction
+
+[TO BE WRITTEN AFTER FEASIBILITY. Motivation: climate change intensifies
+marine heatwaves; Brazil lacks continuous national fisheries statistics;
+satellite-based effort data enable high-frequency monitoring. Contributions:
+(i) first high-frequency evidence on MHW–fishing effort responses for
+Brazil; (ii) the Marine Fisheries Data Cube as a reproducible IS artifact;
+(iii) policy implications for dynamic closures and adaptation.]
+
+# Research Context
+
+[Brazilian fisheries data fragmentation; discontinued national statistics;
+AIS coverage and its bias toward larger vessels — stated upfront.]
+
+# Related Literature
+
+[Systematic pass pending. Only Crossref-verified references enter
+references.bib. Currently verified: @hobday2016 (MHW definition);
+@schlegel2018 (heatwaveR implementation).]
+
+# Theoretical Background
+
+[Spatial bioeconomics of fishing location choice under environmental
+shocks; expected margins: intensity, participation, relocation.]
+
+# The Marine Fisheries Data Cube
+
+[Architecture: R-first pipeline (targets), Parquet storage, DuckDB
+analytical queries, H3 spatial keys, checksums, lineage, schema validation.
+People–process–technology framing.]
+
+# Data
+
+[Sources actually verified as of 2026-09-03: GFW apparent fishing effort
+(API v3, token-gated), NOAA OISST v2.1 (open), IBGE territorial layers
+(open). Extensions conditional on feasibility: chlorophyll (Copernicus),
+MPAs (CNUC/ICMBio), ports (ANTAQ), employment (RAIS/CAGED), Seguro-Defeso.
+Measurement caveats: apparent effort is model-inferred; artisanal fleet
+under-covered.]
+
+# Empirical Strategy
+
+[Cell-by-month panel; cell and period fixed effects; regional seasonality;
+contemporaneous and lagged MHW exposure (Hobday et al. 2016 definition);
+Conley standard errors; two-part and PPML alternatives; neighborhood
+exposure for displacement. See docs/estimand_table.md.]
+
+# Results
+
+[RESULT TO BE GENERATED]
+
+# Robustness
+
+[RESULT TO BE GENERATED — alternative MHW thresholds/climatologies,
+resolutions, weekly frequency, leads/placebos, low-coverage exclusions,
+Conley cutoffs, zero-inflation handling.]
+
+# Information Systems Contributions
+
+[Data cube evaluation: reproducibility, lineage, query performance,
+extensibility; prototype dashboard for monitoring and alerts.]
+
+# Economic and Policy Implications
+
+[TO BE WRITTEN AFTER RESULTS.]
+
+# Limitations
+
+[AIS coverage bias; apparent-effort measurement error; associational
+interpretation boundaries; 0.25° SST resolution near the coast.]
+
+# Conclusion
+
+[TO BE WRITTEN LAST.]
+
+# References
+
+::: {#refs}
+:::

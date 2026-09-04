@@ -1,0 +1,14 @@
+---
+title: "SBSI version — Information Systems oriented"
+---
+
+<!-- STUB. NÃO submeter simultaneamente com versão substancialmente igual à
+econômica. Diferenças obrigatórias, a registrar antes da escrita:
+- Pergunta: como projetar/avaliar uma infraestrutura geoespacial
+  reproduzível para monitoramento pesqueiro-climático (design science),
+  não o efeito econométrico em si;
+- Contribuição: artefato (Marine Fisheries Data Cube), requisitos,
+  arquitetura, avaliação (pessoas-processos-tecnologia, desempenho de
+  consultas, linhagem, reprodutibilidade);
+- Resultados: métricas do sistema + caso de uso ilustrativo (não a tabela
+  econométrica completa). -->

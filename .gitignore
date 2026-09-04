@@ -1,0 +1,55 @@
+# --- Credenciais e segredos (NUNCA versionar) ---
+.env
+.env.*
+.Renviron
+config/secrets.yml
+*_token*
+*.pem
+*.key
+
+# --- Dados (brutos e derivados ficam fora do Git) ---
+data/raw/*
+data/interim/*
+data/processed/*
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+# metadados pequenos (checksums, inventários) SÃO versionados
+!data/metadata/
+
+# --- Artefatos do pipeline ---
+_targets/
+outputs/models/*
+outputs/dashboard/*
+!outputs/models/.gitkeep
+!outputs/dashboard/.gitkeep
+outputs/logs/*.log
+
+# --- R ---
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+renv/library/
+renv/local/
+renv/cellar/
+renv/lock/
+renv/python/
+renv/sandbox/
+renv/staging/
+
+# --- Python ---
+python/.venv/
+__pycache__/
+*.pyc
+
+# --- Quarto ---
+/.quarto/
+article/*_files/
+article/*.html
+article/*.pdf
+article/*.tex
+
+# --- SO ---
+.DS_Store
+Thumbs.db

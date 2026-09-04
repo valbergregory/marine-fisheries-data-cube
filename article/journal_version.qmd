@@ -1,0 +1,8 @@
+---
+title: "Journal version — economics-oriented (Marine Policy / Fisheries Research / Ecological Economics / ICES JMS)"
+---
+
+<!-- STUB. Derivará de manuscript.qmd após os resultados.
+Foco: pergunta econômica (resposta do esforço a MHWs), identificação,
+robustez. O Data Cube aparece como infraestrutura de dados (seção Data),
+não como contribuição principal. -->

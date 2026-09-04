@@ -1,0 +1,126 @@
+# Inventário máquina-legível das fontes de dados.
+# status_teste: ok | ok_requer_token | pendente | bloqueado | descartado
+# Datas de acesso/teste no formato ISO. Detalhes narrativos em docs/data_inventory.md.
+# NADA aqui foi presumido: cada status reflete um teste real registrado.
+
+fishing_effort_gfw:
+  instituicao: "Global Fishing Watch"
+  url: "https://globalfishingwatch.org/our-apis/"
+  documentacao: "https://globalfishingwatch.org/our-apis/documentation"
+  cliente_r: "gfwr (GitHub: GlobalFishingWatch/gfwr — NAO esta no CRAN, verificado 2026-09-03)"
+  licenca: "CC BY-SA 4.0 (dados agregados); confirmar termos da API v3 antes de redistribuir"
+  autenticacao: "token gratuito (registro no portal de APIs)"
+  resolucao_espacial: "0.01 ou 0.1 grau (4wings report); flexivel por regiao"
+  resolucao_temporal: "diaria (agregavel)"
+  periodo: "2012-presente (AIS); confirmar cobertura efetiva no Brasil"
+  variaveis: ["apparent_fishing_hours", "vessel_count", "gear_type", "flag"]
+  formato: "JSON/CSV via API"
+  tamanho_estimado: "MB por consulta regional agregada"
+  data_teste: "2026-09-03"
+  status_teste: "ok_requer_token"
+  observacao_teste: "Endpoint v3 respondeu HTTP 401 sem token (servico ativo, autenticacao necessaria). Token deve ser criado pelo pesquisador."
+  limitacoes: "AIS cobre principalmente embarcacoes maiores; frota artesanal brasileira e sub-representada — limitacao central a documentar no artigo. 'Apparent fishing effort' e inferencia de modelo, nao esforco declarado."
+
+sst_oisst:
+  instituicao: "NOAA NCEI / PSL"
+  url: "https://www.ncei.noaa.gov/products/optimum-interpolation-sst"
+  acesso_arquivos: "https://www.ncei.noaa.gov/data/sea-surface-temperature-optimum-interpolation/v2.1/access/avhrr/"
+  acesso_opendap: "https://psl.noaa.gov/thredds/dodsC/Datasets/noaa.oisst.v2.highres/"
+  documentacao: "OISST v2.1 (Huang et al.); citar artigo oficial apos verificacao Crossref"
+  licenca: "dominio publico (dados do governo dos EUA)"
+  autenticacao: "nenhuma"
+  resolucao_espacial: "0.25 grau"
+  resolucao_temporal: "diaria"
+  periodo: "1981-09 ate presente"
+  variaveis: ["sst", "anom", "err", "ice"]
+  formato: "NetCDF (1 arquivo/dia, ~1.5 MB global)"
+  tamanho_estimado: "~550 MB/ano global; recorte Brasil ~5-8% disso via OPeNDAP"
+  data_teste: "2026-09-03"
+  status_teste: "ok"
+  observacao_teste: "HEAD 200 em arquivo diario NCEI (Content-Length 1545085, application/x-netcdf); OPeNDAP PSL 200. ERDDAP CoastWatch/Upwell indisponivel no dia do teste (HTTP 000) — usar NCEI/PSL como caminho primario."
+  limitacoes: "0.25 grau e mais grosso que celulas H3 res>=6; interpolacao otima suaviza extremos costeiros."
+
+chlorophyll_copernicus:
+  instituicao: "Copernicus Marine Service (CMEMS)"
+  url: "https://data.marine.copernicus.eu/"
+  documentacao: "https://help.marine.copernicus.eu/"
+  licenca: "Copernicus: uso livre com atribuicao; confirmar termos por produto"
+  autenticacao: "registro gratuito + toolbox 'copernicusmarine' (Python) ou API"
+  resolucao_espacial: "4 km (produtos globais de cor do oceano)"
+  resolucao_temporal: "diaria/mensal"
+  periodo: "1997-presente (multi-sensor)"
+  variaveis: ["CHL"]
+  formato: "NetCDF/Zarr"
+  data_teste: "2026-09-03"
+  status_teste: "pendente"
+  observacao_teste: "Portal reachable (HTTP 200). Download requer conta — EXTENSAO condicionada a viabilidade; nao e prioridade da fase 1."
+  limitacoes: "nuvens/lacunas costeiras; escolher produto L4 gap-filled se usado."
+
+marine_protected_areas:
+  instituicao: "ICMBio / MMA (CNUC); alternativa: WDPA/Protected Planet"
+  url: "https://www.gov.br/icmbio/pt-br"
+  url_alternativa: "https://www.protectedplanet.net/en"
+  licenca: "CNUC: dado publico; WDPA: sem redistribuicao do shapefile, uso em pesquisa ok"
+  autenticacao: "nenhuma (CNUC); registro simples (WDPA)"
+  resolucao_espacial: "poligonos"
+  data_teste: "2026-09-03"
+  status_teste: "pendente"
+  observacao_teste: "Portais reachable (HTTP 200). Falta localizar e testar o download direto dos poligonos das UCs marinhas (geoservicos CNUC/MMA)."
+
+ports:
+  instituicao: "ANTAQ (Anuario/instalacoes portuarias); complementar: Marinha do Brasil"
+  url: "https://www.gov.br/antaq/pt-br"
+  licenca: "dado publico"
+  autenticacao: "nenhuma"
+  data_teste: "2026-09-03"
+  status_teste: "pendente"
+  observacao_teste: "Portal reachable (HTTP 200). Falta identificar dataset georreferenciado de instalacoes (ANTAQ dados abertos) e cobertura de portos/terminais pesqueiros de pequeno porte."
+  limitacoes: "portos pesqueiros artesanais podem nao constar; avaliar complemento manual documentado."
+
+ibge_territorial:
+  instituicao: "IBGE"
+  url: "https://servicodados.ibge.gov.br/"
+  cliente_r: "geobr (CRAN, verificado 2026-09-03) + APIs de servicodados"
+  licenca: "dado publico"
+  autenticacao: "nenhuma"
+  resolucao_espacial: "municipios, faixa litoranea"
+  data_teste: "2026-09-03"
+  status_teste: "ok"
+  observacao_teste: "API localidades respondeu JSON valido; API malhas v3 HTTP 200; geobr disponivel no CRAN."
+
+rais_caged_emprego:
+  instituicao: "MTE (RAIS / Novo CAGED)"
+  url: "https://pdet.mte.gov.br/"
+  licenca: "microdados publicos (RAIS identificada exige sala segura — usar publica)"
+  autenticacao: "nenhuma (FTP publico)"
+  data_teste: null
+  status_teste: "pendente"
+  observacao_teste: "NAO testado. Extensao condicionada. CNAE 03 (pesca/aquicultura) captura so emprego formal — minoria do setor. Avaliar apenas como outcome municipal secundario."
+
+seguro_defeso:
+  instituicao: "Ministerio do Trabalho/Previdencia — Portal da Transparencia"
+  url: "https://portaldatransparencia.gov.br/"
+  licenca: "dado publico"
+  data_teste: null
+  status_teste: "pendente"
+  observacao_teste: "NAO testado. Extensao condicionada a compatibilidade espaco-temporal (pagamentos por municipio/mes)."
+
+fish_prices:
+  instituicao: "a identificar (CONAB/CEPEA/CEAGESP nao cobrem pescado de forma sistematica nacional)"
+  data_teste: null
+  status_teste: "pendente"
+  observacao_teste: "NAO ha serie nacional consistente conhecida e verificada. Nao usar ate localizar fonte real. Risco alto de indisponibilidade."
+
+anp_fuel_prices:
+  instituicao: "ANP — Levantamento de Precos de Combustiveis"
+  url: "https://www.gov.br/anp/pt-br/assuntos/precos-e-defesa-da-concorrencia/precos"
+  licenca: "dado publico"
+  data_teste: null
+  status_teste: "pendente"
+  observacao_teste: "NAO testado. Possivel controle de custo (diesel maritimo aproximado por diesel municipal). Extensao."
+
+defeso_legislacao:
+  instituicao: "MPA/IBAMA (portarias de defeso)"
+  data_teste: null
+  status_teste: "pendente"
+  observacao_teste: "NAO testado. So entra se puder ser convertida em camada de exposicao especie x area x periodo confiavel; esforco de codificacao manual alto."
