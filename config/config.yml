@@ -1,0 +1,46 @@
+# Configuração central do projeto — lida por R/01_config.R
+# NUNCA coloque tokens/segredos aqui (use .Renviron).
+
+default:
+  project_name: "marine-fisheries-data-cube"
+  seed: 20260903
+  crs_analysis: "EPSG:5880"      # SIRGAS 2000 / Brazil Polyconic (métrico)
+  crs_geodetic: "EPSG:4674"      # SIRGAS 2000
+  paths:
+    raw: "data/raw"
+    interim: "data/interim"
+    processed: "data/processed"
+    metadata: "data/metadata"
+    outputs: "outputs"
+    logs: "outputs/logs"
+
+  # --- Piloto de viabilidade (seção 8 do protocolo) ---
+  feasibility:
+    label: "pilot_ne"
+    # Litoral nordestino: RN, PB, PE, AL (faixa costeira + ZEE próxima)
+    bbox: { xmin: -38.0, xmax: -32.0, ymin: -10.5, ymax: -4.5 }
+    period: { start: "2022-01-01", end: "2023-12-31" }   # máx. 2 anos
+    temporal_resolution: "month"
+    grid:
+      type: "h3"
+      h3_resolution: 5            # ~252 km2/célula; comparar com res 4 e 6
+    max_cells_sample: 400
+
+  # --- Estudo completo (só após aprovação da viabilidade) ---
+  full_study:
+    bbox: { xmin: -54.0, xmax: -25.0, ymin: -35.0, ymax: 6.0 }
+    period: { start: null, end: null }    # decidir após viabilidade
+    temporal_resolution: "month"
+
+  # --- Definição de onda de calor marinha (Hobday et al. 2016) ---
+  mhw:
+    method: "hobday2016"
+    climatology_period: { start: "1991-01-01", end: "2020-12-31" }
+    percentile: 90
+    min_duration_days: 5
+    max_gap_days: 2               # eventos separados por <=2 dias são unidos
+    smooth_percentile_window: 31  # janela default do heatwaveR
+    sensitivity:
+      percentiles: [90, 95]
+      min_durations: [5, 10]
+      climatologies: ["1991-2020", "1982-2011"]

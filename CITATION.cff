@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this research compendium, please cite it as below."
+title: "Marine Fisheries Data Cube: Marine Heatwaves, Ocean Productivity and Fishing Effort along the Brazilian Coast"
+type: software
+authors:
+  - family-names: "Gregory"
+    given-names: "Valber"
+    email: "valber.gregory@gmail.com"
+version: 0.0.1
+date-released: "2026-09-03"
+abstract: >
+  Reproducible R-first geospatial research compendium integrating fishing
+  effort, sea-surface temperature, marine heatwaves, ocean productivity,
+  marine protected areas, ports and territorial characteristics to study
+  how environmental shocks alter the intensity and spatial distribution of
+  fishing effort along the Brazilian coast.
+keywords:
+  - marine heatwaves
+  - fishing effort
+  - fisheries economics
+  - spatial econometrics
+  - information systems
+  - Brazil
+license: MIT

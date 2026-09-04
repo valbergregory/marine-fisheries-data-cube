@@ -1,0 +1,42 @@
+Package: marinefisheriesdatacube
+Title: Marine Fisheries Data Cube - Research Compendium
+Version: 0.0.1
+Authors@R: person("Valber", "Gregory", email = "valber.gregory@gmail.com", role = c("aut", "cre"))
+Description: Research compendium for "Marine Heatwaves, Ocean Productivity and
+    Fishing Effort: High-Frequency Evidence from the Brazilian Coast".
+    This DESCRIPTION exists to declare dependencies for renv explicit
+    snapshots; it is not an installable package.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Depends: R (>= 4.4)
+Imports:
+    targets,
+    tarchetypes,
+    yaml,
+    jsonlite,
+    httr2,
+    curl,
+    data.table,
+    checkmate,
+    testthat
+Suggests:
+    sf,
+    terra,
+    exactextractr,
+    heatwaveR,
+    rerddap,
+    geobr,
+    arrow,
+    duckdb,
+    DBI,
+    fixest,
+    marginaleffects,
+    modelsummary,
+    ggplot2,
+    patchwork,
+    scales,
+    quarto,
+    validate
+Note: Imports = fase de viabilidade (instalar agora). Suggests = fases
+    seguintes (instalar quando a viabilidade for aprovada). Ver
+    docs/decisions_log.md, decisao D3.
