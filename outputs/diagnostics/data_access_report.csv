@@ -1,0 +1,4 @@
+"source","status","detail","tested_at"
+"oisst_ncei","ok","HTTP 200, bytes=1545085","2026-09-03T22:32:27"
+"ibge","ok","UF=PE","2026-09-03T22:32:28"
+"gfw","ok","HTTP 200 autenticado; entries=1","2026-09-03T22:32:29"

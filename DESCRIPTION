@@ -18,8 +18,7 @@ Imports:
     curl,
     data.table,
     checkmate,
-    testthat
-Suggests:
+    testthat,
     sf,
     terra,
     exactextractr,
@@ -35,8 +34,11 @@ Suggests:
     ggplot2,
     patchwork,
     scales,
-    quarto,
+    h3jsr,
+    gfwr,
     validate
-Note: Imports = fase de viabilidade (instalar agora). Suggests = fases
-    seguintes (instalar quando a viabilidade for aprovada). Ver
-    docs/decisions_log.md, decisao D3.
+Suggests:
+    quarto
+Note: Fase 2 instalada em 2026-09-03 (scripts/00b) — pacotes movidos de
+    Suggests para Imports para entrarem no snapshot explicito do renv.
+    Ver docs/decisions_log.md, decisao D3.

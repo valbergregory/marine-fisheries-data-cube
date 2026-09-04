@@ -47,12 +47,16 @@ local({
         "GFW_TOKEN ausente no .Renviron. Criar em https://globalfishingwatch.org/our-apis/")
   } else {
     tryCatch({
-      # consulta minima: busca de datasets (payload pequeno) na API v3
+      # consulta minima valida na API v3: busca de embarcacao (1 resultado)
       r <- httr2::req_perform(
         httr2::req_auth_bearer_token(
-          httr2::request("https://gateway.api.globalfishingwatch.org/v3/datasets?limit=1"),
+          httr2::request(paste0(
+            "https://gateway.api.globalfishingwatch.org/v3/vessels/search",
+            "?query=santa&datasets%5B0%5D=public-global-vessel-identity:latest&limit=1")),
           token))
-      add("gfw", "ok", paste0("HTTP ", httr2::resp_status(r), " autenticado"))
+      j <- httr2::resp_body_json(r)
+      add("gfw", "ok", paste0("HTTP ", httr2::resp_status(r),
+          " autenticado; entries=", length(j$entries)))
     }, error = function(e) add("gfw", "erro",
         paste0("Token presente mas requisicao falhou: ", conditionMessage(e))))
   }

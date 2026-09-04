@@ -117,7 +117,7 @@ anp_fuel_prices:
   licenca: "dado publico"
   data_teste: null
   status_teste: "pendente"
-  observacao_teste: "NAO testado. Possivel controle de custo (diesel maritimo aproximado por diesel municipal). Extensao."
+  observacao_teste: "NAO testado. Possivel controle de custo (diesel maritimo aproximado por diesel municipal). Extensao. Caminho candidato adicional (2026-09-03): series de diesel/deflatores via API do ipeadata (ja usada com sucesso em outro projeto do pesquisador — 'Transmissao de precos do leite'); verificar se as series ANP constam la antes de raspar a ANP diretamente."
 
 defeso_legislacao:
   instituicao: "MPA/IBAMA (portarias de defeso)"
