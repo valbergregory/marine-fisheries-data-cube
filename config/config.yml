@@ -26,11 +26,18 @@ default:
       h3_resolution: 5            # ~252 km2/célula; comparar com res 4 e 6
     max_cells_sample: 400
 
-  # --- Estudo completo (só após aprovação da viabilidade) ---
+  # --- Estudo completo (viabilidade decidida em 2026-09-07: RESTRINGIR) ---
   full_study:
     bbox: { xmin: -54.0, xmax: -25.0, ymin: -35.0, ymax: 6.0 }
-    period: { start: null, end: null }    # decidir após viabilidade
+    period: { start: "2013-01-01", end: "2024-12-31" }  # 12 anos completos GFW
+    sst_years: { start: 1991, end: 2024 }               # climatologia + analise
     temporal_resolution: "month"
+    grid_resolutions: [4, 5]        # comparar; decisao final atualiza D2
+    universe: "fishing_footprint"   # celulas com esforco em >=1 mes
+    paths:
+      gfw: "data/raw/gfw"
+      oisst_global: "data/raw/oisst_global"
+      oisst_crop: "data/interim/oisst_crop"
 
   # --- Definição de onda de calor marinha (Hobday et al. 2016) ---
   mhw:
