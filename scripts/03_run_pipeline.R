@@ -1,5 +1,5 @@
-# 03_run_pipeline.R — executa targets::tar_make() (Background Job)
-# STATUS: bloqueado ate aprovacao da viabilidade (docs/feasibility_report.md).
+# 03_run_pipeline.R — executa o pipeline targets (Background Job)
+# Fase 2 liberada em 2026-09-07 (decisao D14: RESTRINGIR/continuar com ajustes).
 local({
   find_root <- function(start) {
     p <- normalizePath(start, winslash = "/")
@@ -11,8 +11,8 @@ local({
   root <- find_root("."); setwd(root)
   source(file.path(root, "R", "00_setup.R"))
   log_file <- mfdc_open_log("03_run_pipeline")
-  mfdc_log("== INICIO 03_run_pipeline.R ==", file = log_file)
-  # Comando principal (descomentar quando a fase correspondente for liberada):
-  # targets::tar_make()
-  stop("Etapa ainda nao liberada — ver docs/next_steps.md.")
+  mfdc_log("== INICIO tar_make ==", file = log_file)
+  on.exit(mfdc_log("== FIM tar_make ==", file = log_file), add = TRUE)
+  targets::tar_make(reporter = "timestamp")
+  print(targets::tar_progress_summary())
 })
