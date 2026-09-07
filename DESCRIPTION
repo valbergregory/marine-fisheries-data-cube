@@ -23,6 +23,7 @@ Imports:
     terra,
     exactextractr,
     heatwaveR,
+    ncdf4,
     rerddap,
     geobr,
     arrow,
