@@ -95,8 +95,14 @@ list(
 
   # ---- 6. Auditoria ------------------------------------------------------
   tar_target(quality, mfdc_quality_report(
-    list(panel_r4, panel_r5), "outputs/diagnostics/cube_quality.csv", LOGF))
+    list(panel_r4, panel_r5), "outputs/diagnostics/cube_quality.csv", LOGF)),
 
-  # TODO(fase 3): descritivas (R/11), modelos fepois/Conley (R/12-15),
-  # figuras/tabelas (R/16-17), dashboard (R/18), tar_quarto(manuscript).
+  # ---- 7. Modelos principais (fase 3; grade principal = res 4, D17) ------
+  tar_target(models_r4, mfdc_main_models(panel_r4, conley_cutoff_km = 200, LOGF)),
+  tar_target(models_r4_files, mfdc_save_models(models_r4,
+    "outputs/models", "outputs/tables"), format = "file")
+
+  # TODO(fase 3 cont.): res5 robustez, DLNM/leads (R/13), spillover (R/14),
+  # bateria de robustez (R/15), figuras/tabelas finais (R/16-17),
+  # dashboard (R/18), tar_quarto(manuscript).
 )
