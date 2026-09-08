@@ -70,7 +70,8 @@ list(
   tar_target(mhw_px, {
     cube <- mfdc_oisst_cube(oisst_crop_files, pixels_needed, LOGF)
     mfdc_mhw_monthly(cube, pixels_needed, cfg,
-                     cfg$full_study$period$start, cfg$full_study$period$end, LOGF)
+                     cfg$full_study$period$start, cfg$full_study$period$end,
+                     LOGF, cache_dir = "data/interim/mhw_chunks")
   }),
 
   # ---- 5. Paineis (footprint) e artefatos Parquet ------------------------

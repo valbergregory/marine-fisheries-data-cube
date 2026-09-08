@@ -3,8 +3,36 @@
 
 #' MHW mensal por pixel. cube = mfdc_oisst_cube(); pixels na MESMA ordem.
 #' Devolve data.table pixel_id x month: sst_mean, mhw_days, mhw_max_int.
+#' cache_dir: checkpoint por bloco de pixels — quedas de sessao custam
+#' minutos, nao horas (blocos validados pelos proprios pixel_ids).
 mfdc_mhw_monthly <- function(cube, pixel_ids, cfg, period_start, period_end,
-                             log_file = NULL) {
+                             log_file = NULL, cache_dir = NULL,
+                             chunk_size = 250L) {
+  if (!is.null(cache_dir)) {
+    dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
+    chunks <- split(seq_along(pixel_ids),
+                    ceiling(seq_along(pixel_ids) / chunk_size))
+    res <- vector("list", length(chunks))
+    for (ci in seq_along(chunks)) {
+      idx <- chunks[[ci]]
+      f <- file.path(cache_dir, sprintf("mhw_%06d_%06d.rds",
+                     pixel_ids[idx[1]], pixel_ids[idx[length(idx)]]))
+      if (file.exists(f)) {
+        ch <- tryCatch(readRDS(f), error = function(e) NULL)
+        if (!is.null(ch) && identical(ch$pixel_ids, pixel_ids[idx])) {
+          res[[ci]] <- ch$dt; next
+        }
+      }
+      dt <- mfdc_mhw_monthly(
+        list(dates = cube$dates, m = cube$m[idx, , drop = FALSE]),
+        pixel_ids[idx], cfg, period_start, period_end, log_file = NULL)
+      saveRDS(list(pixel_ids = pixel_ids[idx], dt = dt), f)
+      res[[ci]] <- dt
+      mfdc_log(sprintf("  MHW: bloco %d/%d (%d pixels)", ci, length(chunks),
+                       ci * chunk_size), file = log_file)
+    }
+    return(data.table::rbindlist(res))
+  }
   stopifnot(nrow(cube$m) == length(pixel_ids))
   keep <- cube$dates >= as.Date(period_start) & cube$dates <= as.Date(period_end)
   mm <- format(cube$dates[keep], "%Y-%m")
