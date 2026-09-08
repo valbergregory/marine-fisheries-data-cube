@@ -1,0 +1,35 @@
+                              res5_main        trend_regyr        stable_cells
+Dependent Var.:                   hours              hours               hours
+                                                                              
+mhw_days             -0.0107** (0.0036) -0.0066** (0.0024) -0.0120*** (0.0036)
+sst_anom              0.1224** (0.0392) 0.1230*** (0.0350)  0.1365*** (0.0393)
+Fixed-Effects:       ------------------ ------------------ -------------------
+cell                                Yes                Yes                 Yes
+month                               Yes                Yes                 Yes
+region-month_of_year                Yes                Yes                 Yes
+region-year                          No                Yes                  No
+____________________ __________________ __________________ ___________________
+S.E. type                Conley (200km)     Conley (200km)      Conley (200km)
+Observations                  4,533,120            686,160             486,000
+Squared Cor.                    0.37703            0.52074             0.50621
+Pseudo R2                       0.67998            0.74223             0.72151
+BIC                        22,557,550.6       15,074,207.5        14,717,132.7
+
+                               conley100          conley400             model 6
+Dependent Var.:                    hours              hours               hours
+                                                                               
+mhw_days             -0.0113*** (0.0030) -0.0113** (0.0036) -0.0165*** (0.0042)
+sst_anom              0.1308*** (0.0394) 0.1308*** (0.0303)   0.1178** (0.0386)
+Fixed-Effects:       ------------------- ------------------ -------------------
+cell                                 Yes                Yes                 Yes
+month                                Yes                Yes                 Yes
+region-month_of_year                 Yes                Yes                 Yes
+region-year                           No                 No                  No
+____________________ ___________________ __________________ ___________________
+S.E. type                 Conley (100km)     Conley (400km)      Conley (200km)
+Observations                     686,160            686,160             686,160
+Squared Cor.                     0.50691            0.50691             0.50868
+Pseudo R2                        0.73454            0.73454             0.73474
+BIC                         15,520,953.8       15,520,953.8        15,509,086.8
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
