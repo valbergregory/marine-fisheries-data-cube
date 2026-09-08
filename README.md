@@ -67,6 +67,8 @@ e gerar o token no portal de APIs.
 
 ## Licenças e redistribuição
 
+Code: MIT ([LICENSE](LICENSE)). Text, documentation and data: see [LICENSING.md](LICENSING.md).
+
 Cada fonte tem licença própria — ver `config/data_sources.yml` e
 `docs/data_inventory.md`. Dados brutos não são redistribuídos neste
 repositório; apenas código, metadados e agregados permitidos.
