@@ -1,0 +1,45 @@
+                             ppml_mhw      ppml_mhw_anom          ext_lpm
+Dependent Var.:                 hours              hours   effort_present
+                                                                         
+mhw_days             -0.0041 (0.0034) -0.0113** (0.0035) -0.0006 (0.0004)
+sst_anom                               0.1308** (0.0398)                 
+l(mhw_days, 0)                                                           
+l(mhw_days, 1)                                                           
+l(mhw_days, 2)                                                           
+l(mhw_days, 3)                                                           
+mhw_max_int                                                              
+Fixed-Effects:       ---------------- ------------------ ----------------
+cell                              Yes                Yes              Yes
+month                             Yes                Yes              Yes
+region-month_of_year              Yes                Yes              Yes
+____________________ ________________ __________________ ________________
+Family                        Poisson            Poisson              OLS
+S.E. type              Conley (200km)     Conley (200km)   Conley (200km)
+Observations                  686,160            686,160          686,160
+Squared Cor.                  0.50441            0.50691          0.21383
+Pseudo R2                     0.73412            0.73454          0.28358
+BIC                      15,545,556.4       15,520,953.8        483,640.4
+
+                             log1p_rob           ppml_dyn    ppml_intensity
+Dependent Var.:           log1p(hours)              hours             hours
+                                                                           
+mhw_days             -0.0033. (0.0018)                    -0.0068. (0.0037)
+sst_anom                                                                   
+l(mhw_days, 0)                           -0.0018 (0.0020)                  
+l(mhw_days, 1)                           -0.0009 (0.0025)                  
+l(mhw_days, 2)                         -0.0059** (0.0019)                  
+l(mhw_days, 3)                           -0.0003 (0.0026)                  
+mhw_max_int                                                0.0607. (0.0314)
+Fixed-Effects:       ----------------- ------------------ -----------------
+cell                               Yes                Yes               Yes
+month                              Yes                Yes               Yes
+region-month_of_year               Yes                Yes               Yes
+____________________ _________________ __________________ _________________
+Family                             OLS            Poisson           Poisson
+S.E. type               Conley (200km)     Conley (200km)    Conley (200km)
+Observations                   686,160            671,724           686,160
+Squared Cor.                   0.32667            0.50530           0.50478
+Pseudo R2                      0.12324            0.73481           0.73415
+BIC                        1,997,387.1       15,397,831.3      15,543,585.5
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
