@@ -1,0 +1,3 @@
+grid_res,n_cells,n_months,n_rows,key_unique,sst_na_rows,share_effort_pos,share_mhw_any,mean_mhw_days,total_hours,sd_within_log1p,p50_hours_pos
+4,4765,144,686160,TRUE,0,0.1635,0.3369,4.84,8154935,0.9049,13.1
+5,31481,144,4533264,TRUE,0,0.0895,0.3353,4.82,8365472,0.4553,4.3
