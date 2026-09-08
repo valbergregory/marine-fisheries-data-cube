@@ -100,9 +100,40 @@ list(
   # ---- 7. Modelos principais (fase 3; grade principal = res 4, D17) ------
   tar_target(models_r4, mfdc_main_models(panel_r4, conley_cutoff_km = 200, LOGF)),
   tar_target(models_r4_files, mfdc_save_models(models_r4,
-    "outputs/models", "outputs/tables"), format = "file")
+    "outputs/models", "outputs/tables"), format = "file"),
 
-  # TODO(fase 3 cont.): res5 robustez, DLNM/leads (R/13), spillover (R/14),
-  # bateria de robustez (R/15), figuras/tabelas finais (R/16-17),
+  # ---- 8. Dinamica (leads = placebo) e spillover -------------------------
+  tar_target(dyn_r4, mfdc_dynamic_models(panel_r4, 200, LOGF)),
+  tar_target(dyn_r4_files, mfdc_save_dynamic(dyn_r4,
+    "outputs/models", "outputs/tables"), format = "file"),
+  tar_target(spill_r4, mfdc_spatial_models(panel_r4, dist_km = 60,
+    conley_cutoff_km = 200, log_file = LOGF)),
+  tar_target(spill_r4_files, mfdc_save_spatial(spill_r4,
+    "outputs/models", "outputs/tables"), format = "file"),
+
+  # ---- 9. Robustez (res5, cutoffs, tendencias, amostra estavel, p95) -----
+  tar_target(mhw_px_p95, {
+    cfg95 <- cfg; cfg95$mhw$percentile <- 95
+    cube <- mfdc_oisst_cube(oisst_crop_files, pixels_needed, LOGF)
+    mfdc_mhw_monthly(cube, pixels_needed, cfg95,
+                     cfg$full_study$period$start, cfg$full_study$period$end,
+                     LOGF, cache_dir = "data/interim/mhw_chunks_p95")
+  }),
+  tar_target(panel_r4_p95, mfdc_build_panel(eff_r4, cells_r4, mhw_px_p95,
+    4L, months_all, LOGF)),
+  tar_target(rob_altdef, mfdc_altdef_model(panel_r4_p95, "mhw_p95", LOGF)),
+  tar_target(rob_main, mfdc_robustness_models(panel_r4, panel_r5, LOGF)),
+  tar_target(rob_files, mfdc_save_robustness(rob_main, list(rob_altdef),
+    "outputs/models", "outputs/tables"), format = "file"),
+
+  # ---- 10. Figuras -------------------------------------------------------
+  tar_target(fig_event, mfdc_fig_event_study(dyn_r4,
+    "outputs/figures/fig_event_study_res4.png"), format = "file"),
+  tar_target(fig_maps, mfdc_fig_maps(panel_r4,
+    "outputs/figures/fig_maps_effort_mhw.png"), format = "file"),
+  tar_target(fig_ts, mfdc_fig_timeseries(panel_r4,
+    "outputs/figures/fig_timeseries.png"), format = "file")
+
+  # TODO(fase 4): tabelas finais do artigo (R/17, modelsummary->tex),
   # dashboard (R/18), tar_quarto(manuscript).
 )
