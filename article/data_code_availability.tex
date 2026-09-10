@@ -1,0 +1,25 @@
+% data_code_availability.tex — repository infrastructure statement.
+% Fill every [bracket] before submission and re-check each licence page.
+
+\section*{Data and code availability}
+All code that collects, processes and analyses the data, together with the
+reproducibility documentation, is publicly available at
+\url{https://github.com/valbergregory/marine-fisheries-data-cube}
+(release [tag], commit [hash]). The analysis is orchestrated by a
+\texttt{targets} pipeline; package versions are pinned in \texttt{renv.lock};
+every downloaded file is registered with a checksum in
+\texttt{data/metadata/checksums.csv}. Every table, figure and number reported
+in this article is produced by that pipeline; none was typed by hand.
+
+Raw data are \emph{not} redistributed in the repository and remain governed by
+their providers' terms. Apparent fishing effort comes from Global Fishing Watch
+(4Wings API v3, accessed [date]; data licensed CC BY-SA 4.0, free registration
+required). Sea-surface temperature comes from the NOAA OISST v2.1 daily product
+(NOAA PSL, accessed [date]; United States government data, public domain).
+Territorial layers come from IBGE (public data). The full inventory, including
+licences, access dates and known limitations, is in
+\texttt{config/data\_sources.yml} and \texttt{docs/data\_inventory.md}.
+
+Derived aggregates released with this article are shared under
+[CC BY-SA 4.0, to match the Global Fishing Watch share-alike requirement],
+after verification of the provider's API terms of service.
