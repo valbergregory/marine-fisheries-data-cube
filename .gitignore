@@ -54,6 +54,10 @@ article/*.tex
 .DS_Store
 Thumbs.db
 
+# --- Overleaf export (regenerado pelo pipeline) ---
+outputs/overleaf/
+outputs/overleaf_*.zip
+
 # --- Texto do artigo (local; nao versionado). Publicar apenas o PDF final em artigo/ ---
 overleaf/
 article/
