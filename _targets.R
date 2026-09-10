@@ -154,8 +154,14 @@ list(
     format = "file"),
   tar_target(results_digest, mfdc_results_digest(models_r4, dyn_r4, spill_r4,
     rob_main, list(rob_altdef), het_r4, quality,
-    "outputs/tables/RESULTS_DIGEST.md"), format = "file")
+    "outputs/tables/RESULTS_DIGEST.md"), format = "file"),
 
-  # TODO(fase 5): dashboard (R/18); manuscrito e prosa escritos pelo autor
-  # (politica de IA em docs/AI_POLICY_AND_REPRODUCIBILITY.md).
+  # ---- 13. Pacote Overleaf (tabelas + figuras + numbers.tex) -------------
+  tar_target(overleaf, mfdc_export_overleaf(models_r4, dyn_r4, spill_r4,
+    rob_main, list(rob_altdef), het_r4, quality, descriptives, cfg,
+    tex_tables, c(fig_event, fig_maps, fig_ts),
+    out_dir = "outputs/overleaf", log_file = LOGF), format = "file")
+
+  # TODO(fase 5): dashboard (R/18); prosa do artigo escrita pelo autor em
+  # Overleaf (politica em docs/AI_POLICY_AND_REPRODUCIBILITY.md).
 )

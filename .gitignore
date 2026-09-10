@@ -53,3 +53,7 @@ article/*.tex
 # --- SO ---
 .DS_Store
 Thumbs.db
+
+# --- Overleaf export (regenerado pelo pipeline) ---
+outputs/overleaf/
+outputs/overleaf_*.zip
