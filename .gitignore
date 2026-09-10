@@ -48,7 +48,14 @@ __pycache__/
 article/*_files/
 article/*.html
 article/*.pdf
-article/*.tex
+# .tex do artigo SAO versionados (esqueleto + declaracoes); ignoramos apenas
+# os subprodutos de compilacao
+article/*.aux
+article/*.log
+article/*.out
+article/*.bbl
+article/*.blg
+article/*.synctex.gz
 
 # --- SO ---
 .DS_Store
