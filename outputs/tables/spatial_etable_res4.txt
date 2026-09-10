@@ -1,19 +1,21 @@
-                             ppml_spill         ext_spill
-Dependent Var.:                   hours    effort_present
-                                                         
-mhw_days               -0.0038 (0.0038) 0.0007** (0.0002)
-mhw_days_nb            -0.0090 (0.0062) -0.0015* (0.0006)
-sst_anom             0.1391*** (0.0402)   0.0022 (0.0060)
-Fixed-Effects:       ------------------ -----------------
-cell                                Yes               Yes
-month                               Yes               Yes
-region-month_of_year                Yes               Yes
-____________________ __________________ _________________
-Family                          Poisson               OLS
-S.E. type                Conley (200km)    Conley (200km)
-Observations                    686,016           686,016
-Squared Cor.                    0.50686           0.21386
-Pseudo R2                       0.73456           0.28358
-BIC                        15,518,666.9         483,644.7
+                             ppml_rings          ext_rings
+Dependent Var.:                   hours     effort_present
+                                                          
+mhw_days               -0.0026 (0.0031)    0.0002 (0.0002)
+mhw_nb_k1              -0.0147 (0.0096)   -0.0002 (0.0003)
+mhw_nb_mid             0.0147. (0.0075)    0.0010 (0.0006)
+mhw_nb_far             -0.0122 (0.0098) -0.0026** (0.0009)
+sst_anom             0.1365*** (0.0401)    0.0044 (0.0059)
+Fixed-Effects:       ------------------ ------------------
+cell                                Yes                Yes
+month                               Yes                Yes
+region-month_of_year                Yes                Yes
+____________________ __________________ __________________
+Family                          Poisson                OLS
+S.E. type                Conley (200km)     Conley (200km)
+Observations                    686,160            686,160
+Squared Cor.                    0.50695            0.21417
+Pseudo R2                       0.73468            0.28410
+BIC                        15,512,704.7          483,391.9
 ---
 Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1

@@ -1,9 +1,7 @@
 # 16_figures.R — figuras do artigo (ggplot2), geradas pelo pipeline.
 
 mfdc_fig_event_study <- function(dyn, out_png) {
-  es <- data.table::copy(dyn$event_study)
-  data.table::setnames(es, c("Estimate", "Std. Error"), c("b", "se"),
-                       skip_absent = TRUE)
+  es <- data.table::copy(dyn$event_study)   # colunas ja padronizadas: b/se/p
   g <- ggplot2::ggplot(es, ggplot2::aes(x = horizon, y = b)) +
     ggplot2::geom_hline(yintercept = 0, linetype = 2, colour = "grey50") +
     ggplot2::geom_vline(xintercept = -0.5, linetype = 3, colour = "grey70") +

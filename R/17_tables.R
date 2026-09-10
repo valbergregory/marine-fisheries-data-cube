@@ -56,8 +56,7 @@ mfdc_results_digest <- function(models, dyn, spill, rob, alt, het, quality,
   num <- function(dt, m, t) {
     r <- dt[model == m & term == t]
     if (!nrow(r)) return("n/a")
-    sprintf("%.4f (SE %.4f, p=%.3g)", r$Estimate[1], r$`Std. Error`[1],
-            r$`Pr(>|t|)`[1])
+    sprintf("%.4f (SE %.4f, p=%.3g)", r$b[1], r$se[1], r$p[1])
   }
   all_coefs <- data.table::rbindlist(list(models$coefs, dyn$coefs, spill$coefs,
     rob$coefs, het$coefs, data.table::rbindlist(lapply(alt, `[[`, "coefs"))),
@@ -73,24 +72,20 @@ mfdc_results_digest <- function(models, dyn, spill, rob, alt, het, quality,
     sprintf("- SST anomaly: %s", num(models$coefs, "ppml_mhw_anom", "sst_anom")),
     sprintf("- Extensive margin: %s", num(models$coefs, "ext_lpm", "mhw_days")),
     "", "## Dynamics (leads = placebo)",
-    paste0("- ", apply(dyn$event_study[, .(horizon, Estimate, `Std. Error`,
-      `Pr(>|t|)`)], 1, function(r) sprintf("h=%s: %.4f (SE %.4f, p=%.3g)",
-      r[1], as.numeric(r[2]), as.numeric(r[3]), as.numeric(r[4])))),
+    dyn$event_study[, sprintf("- h=%d: %.4f (SE %.4f, p=%.3g)", horizon, b, se, p)],
     "", "## Spillovers by ring",
     sprintf("- own: %s", num(spill$coefs, "ppml_rings", "mhw_days")),
     sprintf("- 0-60 km: %s", num(spill$coefs, "ppml_rings", "mhw_nb_k1")),
     sprintf("- 60-150 km: %s", num(spill$coefs, "ppml_rings", "mhw_nb_mid")),
     sprintf("- 150-300 km: %s", num(spill$coefs, "ppml_rings", "mhw_nb_far")),
     "", "## Heterogeneity (full coefficients in heterogeneity_coefs.csv)",
-    paste0("- ", het$coefs[grepl("mhw_days", term),
-      sprintf("%s | %s: %.4f (p=%.3g)", model, term, Estimate, `Pr(>|t|)`)]),
+    het$coefs[grepl("mhw_days", term),
+      sprintf("- %s | %s: %.4f (SE %.4f, p=%.3g)", model, term, b, se, p)],
     "", "## Robustness",
-    paste0("- ", rob$coefs[term == "mhw_days",
-      sprintf("%s: %.4f (SE %.4f, p=%.3g)", model, Estimate, `Std. Error`,
-              `Pr(>|t|)`)]),
-    paste0("- ", data.table::rbindlist(lapply(alt, `[[`, "coefs"))[
-      term == "mhw_days", sprintf("%s: %.4f (SE %.4f, p=%.3g)", model, Estimate,
-        `Std. Error`, `Pr(>|t|)`)]),
+    rob$coefs[term == "mhw_days",
+      sprintf("- %s: %.4f (SE %.4f, p=%.3g)", model, b, se, p)],
+    data.table::rbindlist(lapply(alt, `[[`, "coefs"))[term == "mhw_days",
+      sprintf("- %s: %.4f (SE %.4f, p=%.3g)", model, b, se, p)],
     "", "## Cube quality", paste0("- ", capture.output(print(quality))))
   writeLines(lines, out_md)
   out_md

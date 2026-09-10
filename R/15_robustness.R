@@ -26,11 +26,7 @@ mfdc_robustness_models <- function(panel_r4, panel_r5, log_file = NULL) {
     list(conley100 = mfdc_vcov_summary(base4, 100, log_file),
          conley400 = mfdc_vcov_summary(base4, 400, log_file))
   )
-  coefs <- data.table::rbindlist(lapply(names(sums), function(nm) {
-    ct <- as.data.frame(sums[[nm]]$sum$coeftable)
-    data.table::data.table(model = nm, term = rownames(ct), ct,
-                           vcov = sums[[nm]]$vcov)
-  }), fill = TRUE)
+  coefs <- mfdc_coef_table(sums)
   list(summaries = lapply(sums, `[[`, "sum"), coefs = coefs,
        n_stable_cells = length(stable))
 }
@@ -42,10 +38,8 @@ mfdc_altdef_model <- function(panel_alt, label, log_file = NULL) {
   m <- fixest::fepois(stats::as.formula(paste(
     "hours ~ mhw_days + sst_anom |", fe)), data = p)
   s <- mfdc_vcov_summary(m, 200, log_file)
-  ct <- as.data.frame(s$sum$coeftable)
-  list(label = label, summary = s$sum,
-       coefs = data.table::data.table(model = label, term = rownames(ct), ct,
-                                      vcov = s$vcov))
+  sl <- stats::setNames(list(s), label)
+  list(label = label, summary = s$sum, coefs = mfdc_coef_table(sl))
 }
 
 mfdc_save_robustness <- function(rob, alt_list, dir_models, dir_tables) {
