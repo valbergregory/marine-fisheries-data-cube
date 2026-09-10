@@ -1,0 +1,46 @@
+
+\begin{table}[htbp]
+   \caption{\label{tab:main} Marine heatwave exposure and apparent fishing effort}
+   \centering
+   \begin{tabular}{lcccccc}
+      \tabularnewline \midrule \midrule
+      Dependent Variables: & \multicolumn{2}{c}{Fishing hours} & Any effort (0/1) & log1p(hours) & \multicolumn{2}{c}{Fishing hours}\\
+      Model:               & (1)          & (2)             & (3)       & (4)           & (5)             & (6)\\  
+                           &  Poisson     & Poisson         & OLS       & OLS           & Poisson         & Poisson\\  
+      \midrule
+      \emph{Variables}\\
+      MHW days             & -0.0041      & -0.0113$^{***}$ & -0.0006   & -0.0033$^{*}$ &                 & -0.0068$^{*}$\\   
+                           & (0.0034)     & (0.0035)        & (0.0004)  & (0.0018)      &                 & (0.0037)\\   
+      SST anomaly          &              & 0.1308$^{***}$  &           &               &                 &   \\   
+                           &              & (0.0398)        &           &               &                 &   \\   
+      l(mhw\_days, 0)      &              &                 &           &               & -0.0018         &   \\   
+                           &              &                 &           &               & (0.0020)        &   \\   
+      l(mhw\_days, 1)      &              &                 &           &               & -0.0009         &   \\   
+                           &              &                 &           &               & (0.0025)        &   \\   
+      l(mhw\_days, 2)      &              &                 &           &               & -0.0059$^{***}$ &   \\   
+                           &              &                 &           &               & (0.0019)        &   \\   
+      l(mhw\_days, 3)      &              &                 &           &               & -0.0003         &   \\   
+                           &              &                 &           &               & (0.0026)        &   \\   
+      MHW max. intensity   &              &                 &           &               &                 & 0.0607$^{*}$\\   
+                           &              &                 &           &               &                 & (0.0314)\\   
+      \midrule
+      \emph{Fixed-effects}\\
+      Cell                 & Yes          & Yes             & Yes       & Yes           & Yes             & Yes\\  
+      Month                & Yes          & Yes             & Yes       & Yes           & Yes             & Yes\\  
+      Region-Month of year & Yes          & Yes             & Yes       & Yes           & Yes             & Yes\\  
+      \midrule
+      \emph{Fit statistics}\\
+      Observations         & 686,160      & 686,160         & 686,160   & 686,160       & 671,724         & 686,160\\  
+      Squared Correlation  & 0.50441      & 0.50691         & 0.21383   & 0.32667       & 0.50530         & 0.50478\\  
+      Pseudo R$^2$         & 0.73412      & 0.73454         & 0.28358   & 0.12324       & 0.73481         & 0.73415\\  
+      BIC                  & 15,545,556.4 & 15,520,953.8    & 483,640.4 & 1,997,387.1   & 15,397,831.3    & 15,543,585.5\\  
+      \midrule \midrule
+      \multicolumn{7}{l}{\emph{Conley (200km) standard-errors in parentheses}}\\
+      \multicolumn{7}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
+   \end{tabular}
+   
+   \par \raggedright 
+   Conley standard errors (200 km). Associational estimates; see identification strategy.
+\end{table}
+
+

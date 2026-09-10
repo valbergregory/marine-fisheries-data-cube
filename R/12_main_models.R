@@ -13,6 +13,21 @@ mfdc_prep_panel <- function(panel) {
   p[]
 }
 
+#' Normaliza a tabela de coeficientes: Poisson traz "Pr(>|z|)" e OLS
+#' "Pr(>|t|)" — padronizamos para b/se/stat/p em todo o projeto.
+mfdc_coef_table <- function(sums) {
+  data.table::rbindlist(lapply(names(sums), function(nm) {
+    ct <- as.data.frame(sums[[nm]]$sum$coeftable)
+    n <- names(ct)
+    names(ct)[grepl("^Estimate", n)]  <- "b"
+    names(ct)[grepl("^Std", n)]       <- "se"
+    names(ct)[grepl("value$", n)]     <- "stat"
+    names(ct)[grepl("^Pr\\(", n)]     <- "p"
+    data.table::data.table(model = nm, term = rownames(ct), ct,
+                           vcov = sums[[nm]]$vcov)
+  }), fill = TRUE)
+}
+
 #' Sumario com Conley (cutoff km); fallback cluster bidirecional.
 mfdc_vcov_summary <- function(m, cutoff_km, log_file = NULL) {
   s <- tryCatch(summary(m, vcov = fixest::conley(cutoff = cutoff_km)),
@@ -53,11 +68,7 @@ mfdc_main_models <- function(panel, conley_cutoff_km = 200, log_file = NULL) {
 
   sums <- lapply(models, mfdc_vcov_summary, cutoff_km = conley_cutoff_km,
                  log_file = log_file)
-  coefs <- data.table::rbindlist(lapply(names(sums), function(nm) {
-    ct <- as.data.frame(sums[[nm]]$sum$coeftable)
-    data.table::data.table(model = nm, term = rownames(ct), ct,
-                           vcov = sums[[nm]]$vcov)
-  }), fill = TRUE)
+  coefs <- mfdc_coef_table(sums)
 
   list(
     grid_res = p$grid_res[1],
@@ -94,11 +105,7 @@ mfdc_heterogeneity_models <- function(panel, panel_gear, conley_cutoff_km = 200,
   )
   sums <- lapply(models, mfdc_vcov_summary, cutoff_km = conley_cutoff_km,
                  log_file = log_file)
-  coefs <- data.table::rbindlist(lapply(names(sums), function(nm) {
-    ct <- as.data.frame(sums[[nm]]$sum$coeftable)
-    data.table::data.table(model = nm, term = rownames(ct), ct,
-                           vcov = sums[[nm]]$vcov)
-  }), fill = TRUE)
+  coefs <- mfdc_coef_table(sums)
   list(summaries = lapply(sums, `[[`, "sum"), coefs = coefs,
        n_gear_obs = nrow(pg))
 }

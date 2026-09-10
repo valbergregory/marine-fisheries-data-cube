@@ -1,0 +1,55 @@
+                                               by_region             by_gear
+Dependent Var.:                                    hours               hours
+                                                                            
+mhw_days x region = Nordeste           -0.0120* (0.0056)                    
+mhw_days x region = Norte            -0.0409*** (0.0054)                    
+mhw_days x region = Sudeste           -0.0108** (0.0038)                    
+mhw_days x region = Sul                  0.0041 (0.0047)                    
+sst_anom                                0.0898* (0.0396)   0.1250** (0.0410)
+mhw_days x gear = drifting_longlines                     -0.0126*** (0.0037)
+mhw_days x gear = fishing                                 -0.0114** (0.0042)
+mhw_days x gear = other                                    -0.0107* (0.0042)
+mhw_days x gear = set_longlines                             -0.0072 (0.0076)
+mhw_days x gear = trawlers                                  -0.0102 (0.0105)
+mhw_days x far_coast = nearshore                                            
+mhw_days x far_coast = offshore                                             
+Fixed-Effects:                       ------------------- -------------------
+cell                                                 Yes                  No
+month                                                Yes                 Yes
+region-month_of_year                                 Yes                 Yes
+cell_gear                                             No                 Yes
+____________________________________ ___________________ ___________________
+S.E. type                                 Conley (200km)      Conley (200km)
+Observations                                     686,160           1,410,480
+Squared Cor.                                     0.51159             0.39574
+Pseudo R2                                        0.73550             0.67756
+BIC                                         15,465,150.8        20,498,480.0
+
+                                             by_distance
+Dependent Var.:                                    hours
+                                                        
+mhw_days x region = Nordeste                            
+mhw_days x region = Norte                               
+mhw_days x region = Sudeste                             
+mhw_days x region = Sul                                 
+sst_anom                               0.1168** (0.0406)
+mhw_days x gear = drifting_longlines                    
+mhw_days x gear = fishing                               
+mhw_days x gear = other                                 
+mhw_days x gear = set_longlines                         
+mhw_days x gear = trawlers                              
+mhw_days x far_coast = nearshore        -0.0074 (0.0047)
+mhw_days x far_coast = offshore      -0.0239*** (0.0042)
+Fixed-Effects:                       -------------------
+cell                                                 Yes
+month                                                Yes
+region-month_of_year                                 Yes
+cell_gear                                             No
+____________________________________ ___________________
+S.E. type                                 Conley (200km)
+Observations                                     686,160
+Squared Cor.                                     0.50720
+Pseudo R2                                        0.73480
+BIC                                         15,505,862.5
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1

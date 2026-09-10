@@ -1,0 +1,50 @@
+
+\begin{table}[htbp]
+   \caption{\label{tab:dyn} Dynamic specification: leads (placebo) and lags}
+   \centering
+   \begin{tabular}{lcc}
+      \tabularnewline \midrule \midrule
+      Dependent Variable: & \multicolumn{2}{c}{Fishing hours}\\
+      Model:               & (1)                   & (2)\\  
+      \midrule
+      \emph{Variables}\\
+      f(mhw\_days, 3)      & -0.0013               &   \\   
+                           & (0.0023)              &   \\   
+      f(mhw\_days, 2)      & -0.0014               &   \\   
+                           & (0.0026)              &   \\   
+      f(mhw\_days, 1)      & $4.42\times 10^{-6}$  &   \\   
+                           & (0.0021)              &   \\   
+      l(mhw\_days, 0)      & -0.0066$^{***}$       & -0.0085$^{***}$\\   
+                           & (0.0023)              & (0.0024)\\   
+      l(mhw\_days, 1)      & -0.0021               & -0.0014\\   
+                           & (0.0025)              & (0.0024)\\   
+      l(mhw\_days, 2)      & -0.0065$^{***}$       & -0.0053$^{***}$\\   
+                           & (0.0018)              & (0.0018)\\   
+      l(mhw\_days, 3)      & 0.0018                & 0.0031\\   
+                           & (0.0025)              & (0.0024)\\   
+      l(mhw\_days, 4)      & -0.0061$^{**}$        & -0.0046$^{**}$\\   
+                           & (0.0024)              & (0.0023)\\   
+      l(mhw\_days, 5)      & -0.0035$^{*}$         & -0.0025\\   
+                           & (0.0020)              & (0.0018)\\   
+      l(mhw\_days, 6)      & -0.0019               & -0.0030\\   
+                           & (0.0018)              & (0.0019)\\   
+      SST anomaly          & 0.1290$^{***}$        & 0.1324$^{***}$\\   
+                           & (0.0431)              & (0.0374)\\   
+      \midrule
+      \emph{Fixed-effects}\\
+      Cell                 & Yes                   & Yes\\  
+      Month                & Yes                   & Yes\\  
+      Region-Month of year & Yes                   & Yes\\  
+      \midrule
+      \emph{Fit statistics}\\
+      Observations         & 641,790               & 657,432\\  
+      Squared Correlation  & 0.50849               & 0.51027\\  
+      Pseudo R$^2$         & 0.73486               & 0.73620\\  
+      BIC                  & 14,581,096.5          & 15,208,609.3\\  
+      \midrule \midrule
+      \multicolumn{3}{l}{\emph{Conley (200km) standard-errors in parentheses}}\\
+      \multicolumn{3}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
+   \end{tabular}
+\end{table}
+
+

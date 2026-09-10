@@ -64,11 +64,7 @@ mfdc_spatial_models <- function(panel, conley_cutoff_km = 200, log_file = NULL) 
   )
   sums <- lapply(models, mfdc_vcov_summary, cutoff_km = conley_cutoff_km,
                  log_file = log_file)
-  coefs <- data.table::rbindlist(lapply(names(sums), function(nm) {
-    ct <- as.data.frame(sums[[nm]]$sum$coeftable)
-    data.table::data.table(model = nm, term = rownames(ct), ct,
-                           vcov = sums[[nm]]$vcov)
-  }), fill = TRUE)
+  coefs <- mfdc_coef_table(sums)
   list(grid_res = panel$grid_res[1], summaries = lapply(sums, `[[`, "sum"),
        coefs = coefs)
 }

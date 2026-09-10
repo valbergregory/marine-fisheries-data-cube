@@ -18,11 +18,7 @@ mfdc_dynamic_models <- function(panel, conley_cutoff_km = 200, log_file = NULL) 
   )
   sums <- lapply(models, mfdc_vcov_summary, cutoff_km = conley_cutoff_km,
                  log_file = log_file)
-  coefs <- data.table::rbindlist(lapply(names(sums), function(nm) {
-    ct <- as.data.frame(sums[[nm]]$sum$coeftable)
-    data.table::data.table(model = nm, term = rownames(ct), ct,
-                           vcov = sums[[nm]]$vcov)
-  }), fill = TRUE)
+  coefs <- mfdc_coef_table(sums)
 
   # horizonte p/ event-study plot: -3..-1 leads, 0..6 lags
   es <- coefs[model == "ppml_leads_lags" & grepl("mhw_days", term)]

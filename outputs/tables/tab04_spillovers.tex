@@ -1,0 +1,39 @@
+
+\begin{table}[htbp]
+   \caption{\label{tab:spill} Spatial displacement: neighbourhood exposure by distance ring}
+   \centering
+   \begin{tabular}{lcc}
+      \tabularnewline \midrule \midrule
+      Dependent Variables:       & Fishing hours  & Any effort (0/1)\\  
+      Model:                     & (1)            & (2)\\  
+                                 &  Poisson       & OLS\\  
+      \midrule
+      \emph{Variables}\\
+      MHW days                   & -0.0026        & 0.0002\\   
+                                 & (0.0031)       & (0.0002)\\   
+      Neighbour MHW (0-60 km)    & -0.0147        & -0.0002\\   
+                                 & (0.0096)       & (0.0003)\\   
+      Neighbour MHW (60-150 km)  & 0.0147$^{*}$   & 0.0010\\   
+                                 & (0.0075)       & (0.0006)\\   
+      Neighbour MHW (150-300 km) & -0.0122        & -0.0026$^{***}$\\   
+                                 & (0.0098)       & (0.0009)\\   
+      SST anomaly                & 0.1365$^{***}$ & 0.0044\\   
+                                 & (0.0401)       & (0.0059)\\   
+      \midrule
+      \emph{Fixed-effects}\\
+      Cell                       & Yes            & Yes\\  
+      Month                      & Yes            & Yes\\  
+      Region-Month of year       & Yes            & Yes\\  
+      \midrule
+      \emph{Fit statistics}\\
+      Observations               & 686,160        & 686,160\\  
+      Squared Correlation        & 0.50695        & 0.21417\\  
+      Pseudo R$^2$               & 0.73468        & 0.28410\\  
+      BIC                        & 15,512,704.7   & 483,391.9\\  
+      \midrule \midrule
+      \multicolumn{3}{l}{\emph{Conley (200km) standard-errors in parentheses}}\\
+      \multicolumn{3}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
+   \end{tabular}
+\end{table}
+
+

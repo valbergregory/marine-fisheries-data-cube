@@ -1,0 +1,53 @@
+
+\begin{table}[htbp]
+   \caption{\label{tab:het} Heterogeneity by region, gear type and distance to coast}
+   \centering
+   \begin{tabular}{lccc}
+      \tabularnewline \midrule \midrule
+      Dependent Variable: & \multicolumn{3}{c}{Fishing hours}\\
+      Model:                                           & (1)             & (2)             & (3)\\  
+      \midrule
+      \emph{Variables}\\
+      MHW days $\times$ Region $=$ Nordeste            & -0.0120$^{**}$  &                 &   \\   
+                                                       & (0.0056)        &                 &   \\   
+      MHW days $\times$ Region $=$ Norte               & -0.0409$^{***}$ &                 &   \\   
+                                                       & (0.0054)        &                 &   \\   
+      MHW days $\times$ Region $=$ Sudeste             & -0.0108$^{***}$ &                 &   \\   
+                                                       & (0.0038)        &                 &   \\   
+      MHW days $\times$ Region $=$ Sul                 & 0.0041          &                 &   \\   
+                                                       & (0.0047)        &                 &   \\   
+      SST anomaly                                      & 0.0898$^{**}$   & 0.1250$^{***}$  & 0.1168$^{***}$\\   
+                                                       & (0.0396)        & (0.0410)        & (0.0406)\\   
+      MHW days $\times$ gear $=$ drifting\_longlines   &                 & -0.0126$^{***}$ &   \\   
+                                                       &                 & (0.0037)        &   \\   
+      MHW days $\times$ gear $=$ fishing               &                 & -0.0114$^{***}$ &   \\   
+                                                       &                 & (0.0042)        &   \\   
+      MHW days $\times$ gear $=$ other                 &                 & -0.0107$^{**}$  &   \\   
+                                                       &                 & (0.0042)        &   \\   
+      MHW days $\times$ gear $=$ set\_longlines        &                 & -0.0072         &   \\   
+                                                       &                 & (0.0076)        &   \\   
+      MHW days $\times$ gear $=$ trawlers              &                 & -0.0102         &   \\   
+                                                       &                 & (0.0105)        &   \\   
+      MHW days $\times$ far\_coast $=$ nearshore       &                 &                 & -0.0074\\   
+                                                       &                 &                 & (0.0047)\\   
+      MHW days $\times$ far\_coast $=$ offshore        &                 &                 & -0.0239$^{***}$\\   
+                                                       &                 &                 & (0.0042)\\   
+      \midrule
+      \emph{Fixed-effects}\\
+      Cell                                             & Yes             &                 & Yes\\  
+      Month                                            & Yes             & Yes             & Yes\\  
+      Region-Month of year                             & Yes             & Yes             & Yes\\  
+      Cell x gear                                      &                 & Yes             & \\  
+      \midrule
+      \emph{Fit statistics}\\
+      Observations                                     & 686,160         & 1,410,480       & 686,160\\  
+      Squared Correlation                              & 0.51159         & 0.39574         & 0.50720\\  
+      Pseudo R$^2$                                     & 0.73550         & 0.67756         & 0.73480\\  
+      BIC                                              & 15,465,150.8    & 20,498,480.0    & 15,505,862.5\\  
+      \midrule \midrule
+      \multicolumn{4}{l}{\emph{Conley (200km) standard-errors in parentheses}}\\
+      \multicolumn{4}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
+   \end{tabular}
+\end{table}
+
+
