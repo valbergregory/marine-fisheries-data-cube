@@ -52,7 +52,7 @@ mfdc_build_tables <- function(models, dyn, spill, rob, alt, het, desc,
 #' Digest factual dos resultados (numeros + metadados) para o autor escrever a
 #' prosa. NAO contem interpretacao redigida para o artigo.
 mfdc_results_digest <- function(models, dyn, spill, rob, alt, het, quality,
-                                out_md) {
+                                out_md, extras = NULL) {
   num <- function(dt, m, t) {
     r <- dt[model == m & term == t]
     if (!nrow(r)) return("n/a")
@@ -87,6 +87,33 @@ mfdc_results_digest <- function(models, dyn, spill, rob, alt, het, quality,
     data.table::rbindlist(lapply(alt, `[[`, "coefs"))[term == "mhw_days",
       sprintf("- %s: %.4f (SE %.4f, p=%.3g)", model, b, se, p)],
     "", "## Cube quality", paste0("- ", capture.output(print(quality))))
+
+  if (!is.null(extras)) {
+    add <- c("", "## Cumulative effect (lags 0-6, Conley SE)")
+    if (!is.null(extras$cum)) add <- c(add, extras$cum[, sprintf(
+      "- sum of %d lags: %.4f (SE %.4f, p=%.3g; 95%% CI %.4f to %.4f)",
+      k, b, se, p, lo, hi)])
+    if (!is.null(extras$nonlin)) add <- c(add, "", "## Non-linear bins",
+      extras$nonlin$coefs[grepl("_bin::", term),
+        sprintf("- %s: %.4f (SE %.4f, p=%.3g)", term, b, se, p)])
+    if (!is.null(extras$placebos)) add <- c(add, "", "## Placebos",
+      extras$placebos$temporal_coefs[grepl("mhw", term),
+        sprintf("- 12-month lead: %.4f (SE %.4f, p=%.3g)", b, se, p)],
+      extras$placebos$permutation[, sprintf(
+        "- spatial permutation: observed %.4f vs perm mean %.4f (sd %.4f), p_rand=%.3f, 95%% perm range [%.4f, %.4f]",
+        b_obs, perm_mean, perm_sd, p_rand, perm_q025, perm_q975)])
+    if (!is.null(extras$exclusions)) add <- c(add, "", "## Sample exclusions",
+      extras$exclusions$coefs[term == "mhw_days",
+        sprintf("- %s: %.4f (SE %.4f, p=%.3g)", model, b, se, p)])
+    if (!is.null(extras$relocation)) add <- c(add, "",
+      "## Reallocation (region-month; only 4 regions, read with caution)",
+      extras$relocation$coefs[term == "mhw_exp",
+        sprintf("- %s: %.4f (SE %.4f, p=%.3g)", model, b, se, p)])
+    if (!is.null(extras$moran)) add <- c(add, "", "## Residual spatial dependence",
+      extras$moran[, sprintf("- Moran's I = %.4f (permutation p = %.3f, %d cells, %g km)",
+        moran_I, p_perm, n_cells, d_max_km)])
+    lines <- c(lines, add)
+  }
   writeLines(lines, out_md)
   out_md
 }

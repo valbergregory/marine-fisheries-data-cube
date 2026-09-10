@@ -80,6 +80,43 @@ mfdc_main_models <- function(panel, conley_cutoff_km = 200, log_file = NULL) {
   )
 }
 
+#' Efeito acumulado: combinacao linear dos coeficientes com o vcov do summary
+#' (Conley), devolvendo estimativa, erro-padrao e IC 95%.
+mfdc_cumulative_effect <- function(model_sum, pattern = "mhw_days") {
+  b <- stats::coef(model_sum); V <- stats::vcov(model_sum)
+  idx <- grep(pattern, names(b), value = TRUE)
+  stopifnot(length(idx) > 0)
+  w <- rep(1, length(idx))
+  est <- sum(b[idx])
+  se <- sqrt(as.numeric(t(w) %*% V[idx, idx, drop = FALSE] %*% w))
+  data.table::data.table(terms = paste(idx, collapse = " + "), k = length(idx),
+    b = est, se = se, z = est / se, p = 2 * stats::pnorm(-abs(est / se)),
+    lo = est - 1.96 * se, hi = est + 1.96 * se)
+}
+
+#' Nao-linearidade: resposta em faixas (bins) de anomalia e de dias de MHW.
+mfdc_nonlinear_models <- function(panel, conley_cutoff_km = 200, log_file = NULL) {
+  p <- mfdc_prep_panel(panel)
+  p[, anom_bin := cut(sst_anom, c(-Inf, -1, -0.5, 0, 0.5, 1, 1.5, Inf),
+      labels = c("lt_m1", "m1_m05", "m05_0", "0_05", "05_1", "1_15", "gt_15"))]
+  p[, anom_bin := factor(anom_bin)]
+  p[, mhw_bin := cut(mhw_days, c(-Inf, 0, 4, 9, 19, Inf),
+      labels = c("d0", "d1_4", "d5_9", "d10_19", "d20p"))]
+  p[, mhw_bin := factor(mhw_bin)]
+  fe <- "cell + month + region^month_of_year"
+  models <- list(
+    bins_anom = fixest::fepois(stats::as.formula(paste(
+      "hours ~ i(anom_bin, ref = 'm05_0') |", fe)), data = p),
+    bins_mhw = fixest::fepois(stats::as.formula(paste(
+      "hours ~ i(mhw_bin, ref = 'd0') + sst_anom |", fe)), data = p)
+  )
+  sums <- lapply(models, mfdc_vcov_summary, cutoff_km = conley_cutoff_km,
+                 log_file = log_file)
+  list(summaries = lapply(sums, `[[`, "sum"), coefs = mfdc_coef_table(sums),
+       bin_counts = list(anom = p[, .N, by = anom_bin][order(anom_bin)],
+                         mhw = p[, .N, by = mhw_bin][order(mhw_bin)]))
+}
+
 #' Heterogeneidade: efeito por regiao e por arte de pesca.
 #' panel_gear vem de mfdc_build_panel_gear (celula x mes x arte).
 mfdc_heterogeneity_models <- function(panel, panel_gear, conley_cutoff_km = 200,
