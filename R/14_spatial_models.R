@@ -1,39 +1,66 @@
-# 14_spatial_models.R — deslocamento espacial: exposicao MHW da vizinhanca
-# (celulas com centroide a ate dist_km; h3jsr nao expoe API de anel testada,
-# entao a vizinhanca e definida por distancia de centroides — res 4 tem
-# aresta ~22 km, logo 60 km captura o anel k=1).
+# 14_spatial_models.R — deslocamento espacial: exposicao MHW da vizinhanca em
+# ANEIS concentricos (h3jsr nao expoe API de anel testada, entao a vizinhanca
+# e definida por distancia entre centroides; res 4 tem aresta ~22 km).
+# Implementacao com matriz esparsa (Matrix): escala para aneis grandes sem
+# explodir a memoria (o merge cartesiano anterior era O(edges x meses)).
 
-mfdc_neighbor_exposure <- function(panel, dist_km = 60) {
-  cs <- unique(panel[, .(cell, lon_c, lat_c)])
+#' Matriz de vizinhanca normalizada por linha para o anel (d_min, d_max] em km.
+mfdc_ring_matrix <- function(cs, d_min_km, d_max_km) {
   sfp <- sf::st_as_sf(cs, coords = c("lon_c", "lat_c"), crs = 4326)
-  nb <- sf::st_is_within_distance(sfp, dist = dist_km * 1000)
-  edges <- data.table::data.table(
-    from = rep(seq_len(nrow(cs)), lengths(nb)), to = unlist(nb))[from != to]
-  edges[, `:=`(cell = cs$cell[from], nb_cell = cs$cell[to])]
-  mh <- panel[, .(cell, month, mhw_days)]
-  e2 <- merge(edges[, .(cell, nb_cell)], mh,
-              by.x = "nb_cell", by.y = "cell", allow.cartesian = TRUE)
-  e2[, .(mhw_days_nb = mean(mhw_days, na.rm = TRUE),
-         n_nb = data.table::uniqueN(nb_cell)), by = .(cell, month)]
+  inner <- if (d_min_km > 0) sf::st_is_within_distance(sfp, dist = d_min_km * 1000)
+           else vector("list", nrow(cs))
+  outer <- sf::st_is_within_distance(sfp, dist = d_max_km * 1000)
+  from <- rep(seq_len(nrow(cs)), lengths(outer))
+  to   <- unlist(outer)
+  keep <- from != to
+  if (d_min_km > 0) {
+    inner_key <- paste(rep(seq_len(nrow(cs)), lengths(inner)), unlist(inner))
+    keep <- keep & !(paste(from, to) %in% inner_key)
+  }
+  from <- from[keep]; to <- to[keep]
+  W <- Matrix::sparseMatrix(i = from, j = to, x = 1,
+                            dims = c(nrow(cs), nrow(cs)))
+  rs <- Matrix::rowSums(W)
+  list(W = Matrix::Diagonal(x = ifelse(rs > 0, 1 / rs, 0)) %*% W, n_nb = rs)
 }
 
-mfdc_spatial_models <- function(panel, dist_km = 60, conley_cutoff_km = 200,
-                                log_file = NULL) {
-  ring <- mfdc_neighbor_exposure(panel, dist_km)
-  p <- mfdc_prep_panel(panel)
-  p <- merge(p, ring, by = c("cell", "month"), all.x = TRUE)
-  mfdc_log(sprintf("Spillover res %d: %d/%d linhas com vizinhanca (mediana %s vizinhos)",
-    p$grid_res[1], sum(!is.na(p$mhw_days_nb)), nrow(p),
-    stats::median(p$n_nb, na.rm = TRUE)), file = log_file)
-  p <- p[!is.na(mhw_days_nb)]
-  fe <- "cell + month + region^month_of_year"
+#' Exposicao media dos vizinhos por anel; devolve colunas mhw_nb_<tag>.
+mfdc_ring_exposure <- function(panel, rings = list(k1 = c(0, 60),
+                                                   mid = c(60, 150),
+                                                   far = c(150, 300)),
+                               log_file = NULL) {
+  cs <- unique(panel[, .(cell, lon_c, lat_c)])[order(cell)]
+  months <- sort(unique(panel$month))
+  M <- data.table::dcast(panel[, .(cell, month, mhw_days)], cell ~ month,
+                         value.var = "mhw_days")[order(cell)]
+  stopifnot(identical(M$cell, cs$cell))
+  Mx <- as.matrix(M[, -1])
+  Mx[is.na(Mx)] <- 0
+  out <- data.table::data.table(cell = rep(cs$cell, times = length(months)),
+                                month = rep(months, each = nrow(cs)))
+  for (tag in names(rings)) {
+    r <- rings[[tag]]
+    rm_ <- mfdc_ring_matrix(cs, r[1], r[2])
+    E <- as.matrix(rm_$W %*% Mx)
+    out[, (paste0("mhw_nb_", tag)) := as.vector(E)]
+    mfdc_log(sprintf("Anel %s (%g-%g km): mediana %g vizinhos", tag, r[1], r[2],
+                     stats::median(rm_$n_nb)), file = log_file)
+  }
+  out[]
+}
 
+mfdc_spatial_models <- function(panel, conley_cutoff_km = 200, log_file = NULL) {
+  rings <- mfdc_ring_exposure(panel, log_file = log_file)
+  p <- merge(mfdc_prep_panel(panel), rings, by = c("cell", "month"), all.x = TRUE)
+  fe <- "cell + month + region^month_of_year"
   models <- list(
-    # se vizinhos sao atingidos e o esforco migra p/ ca: coef positivo
-    ppml_spill = fixest::fepois(stats::as.formula(paste(
-      "hours ~ mhw_days + mhw_days_nb + sst_anom |", fe)), data = p),
-    ext_spill  = fixest::feols(stats::as.formula(paste(
-      "effort_present ~ mhw_days + mhw_days_nb + sst_anom |", fe)), data = p)
+    # esforco migra p/ ca quando o entorno queima? coef positivo = deslocamento
+    ppml_rings = fixest::fepois(stats::as.formula(paste(
+      "hours ~ mhw_days + mhw_nb_k1 + mhw_nb_mid + mhw_nb_far + sst_anom |", fe)),
+      data = p),
+    ext_rings = fixest::feols(stats::as.formula(paste(
+      "effort_present ~ mhw_days + mhw_nb_k1 + mhw_nb_mid + mhw_nb_far + sst_anom |", fe)),
+      data = p)
   )
   sums <- lapply(models, mfdc_vcov_summary, cutoff_km = conley_cutoff_km,
                  log_file = log_file)
@@ -42,8 +69,8 @@ mfdc_spatial_models <- function(panel, dist_km = 60, conley_cutoff_km = 200,
     data.table::data.table(model = nm, term = rownames(ct), ct,
                            vcov = sums[[nm]]$vcov)
   }), fill = TRUE)
-  list(grid_res = p$grid_res[1], dist_km = dist_km,
-       summaries = lapply(sums, `[[`, "sum"), coefs = coefs)
+  list(grid_res = panel$grid_res[1], summaries = lapply(sums, `[[`, "sum"),
+       coefs = coefs)
 }
 
 mfdc_save_spatial <- function(sp, dir_models, dir_tables) {
@@ -52,5 +79,7 @@ mfdc_save_spatial <- function(sp, dir_models, dir_tables) {
   saveRDS(sp, f1)
   f2 <- file.path(dir_tables, sprintf("spatial_etable_%s.txt", tag))
   writeLines(capture.output(fixest::etable(sp$summaries)), f2)
-  c(f1, f2)
+  f3 <- file.path(dir_tables, sprintf("spatial_coefs_%s.csv", tag))
+  data.table::fwrite(sp$coefs, f3)
+  c(f1, f2, f3)
 }
