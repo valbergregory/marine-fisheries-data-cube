@@ -69,6 +69,56 @@ mfdc_spatial_models <- function(panel, conley_cutoff_km = 200, log_file = NULL) 
        coefs = coefs)
 }
 
+#' Realocacao agregada (E4): distancia media do esforco a costa, concentracao
+#' espacial e n de celulas ativas, por regiao x mes.
+#' ATENCAO: 4 regioes = poucos clusters; reportamos SE robusto (hetero) e
+#' cluster por regiao, com leitura cautelosa (registrado nos metadados).
+mfdc_relocation_models <- function(rm_panel, log_file = NULL) {
+  p <- data.table::copy(rm_panel)[!is.na(dist_w_km)]
+  p[, month_of_year := substr(month, 6, 7)]
+  models <- list(
+    dist_coast = fixest::feols(dist_w_km ~ mhw_exp + sst_anom |
+                                 region + month, data = p),
+    concentration = fixest::feols(hhi ~ mhw_exp + sst_anom |
+                                    region + month, data = p),
+    active_cells = fixest::fepois(n_active ~ mhw_exp + sst_anom |
+                                    region + month, data = p)
+  )
+  sums <- lapply(models, function(m)
+    list(sum = summary(m, vcov = "hetero"), vcov = "hetero"))
+  mfdc_log(sprintf("Realocacao: %d obs regiao-mes (%d regioes) — poucos clusters",
+    nrow(p), data.table::uniqueN(p$region)), file = log_file)
+  list(summaries = lapply(sums, `[[`, "sum"), coefs = mfdc_coef_table(sums),
+       n_regions = data.table::uniqueN(p$region), n_obs = nrow(p))
+}
+
+#' Moran's I dos residuos medios por celula (dependencia espacial residual).
+#' Implementado com a matriz do anel 0-60 km — evita dependencia de spdep.
+mfdc_moran_residuals <- function(panel, model, d_max_km = 60, n_perm = 199L,
+                                 seed = 20260903, log_file = NULL) {
+  p <- mfdc_prep_panel(panel)[!is.na(sst_anom)]
+  # predict alinha por construcao (fixest pode remover singletons na estimacao)
+  p[, fit := as.numeric(stats::predict(model, newdata = p))]
+  p <- p[is.finite(fit)]
+  agg <- p[, .(e = mean(hours - fit)), by = cell]
+  cs <- unique(p[, .(cell, lon_c, lat_c)])[agg, on = "cell"][order(cell)]
+  W <- mfdc_ring_matrix(cs, 0, d_max_km)$W   # normalizada por linha
+  z <- cs$e - mean(cs$e)
+  I_obs <- as.numeric((t(z) %*% (W %*% z)) / sum(z^2)) * nrow(cs) / sum(W)
+  set.seed(seed)
+  I_perm <- vapply(seq_len(n_perm), function(i) {
+    zp <- sample(z)
+    as.numeric((t(zp) %*% (W %*% zp)) / sum(zp^2)) * nrow(cs) / sum(W)
+  }, numeric(1))
+  out <- data.table::data.table(
+    moran_I = I_obs, perm_mean = mean(I_perm), perm_sd = stats::sd(I_perm),
+    p_perm = (1 + sum(abs(I_perm) >= abs(I_obs))) / (1 + n_perm),
+    n_cells = nrow(cs), d_max_km = d_max_km)
+  mfdc_log(sprintf("Moran I dos residuos = %.4f (p_perm = %.3f, %d celulas)",
+                   I_obs, out$p_perm, nrow(cs)), file = log_file)
+  out[]
+}
+
 mfdc_save_spatial <- function(sp, dir_models, dir_tables) {
   tag <- sprintf("res%d", sp$grid_res)
   f1 <- file.path(dir_models, sprintf("spatial_%s.rds", tag))

@@ -13,6 +13,30 @@ mfdc_effort_by_cell <- function(gfw, res) {
     by = .(cell, month)]
 }
 
+#' Painel regiao x mes com outcomes de REALOCACAO (estimando E4):
+#' distancia media do esforco a costa (ponderada pelas horas), concentracao
+#' espacial (HHI) e numero de celulas ativas. A exposicao usa pesos HISTORICOS
+#' fixos por celula (media de horas), para nao contaminar o regressor com a
+#' composicao contemporanea do esforco.
+mfdc_build_region_month <- function(panel, log_file = NULL) {
+  w <- panel[, .(w = mean(hours)), by = cell]
+  p <- merge(panel, w, by = "cell")
+  out <- p[, {
+    tot <- sum(hours)
+    sh <- if (tot > 0) hours / tot else rep(0, .N)
+    .(dist_w_km   = if (tot > 0) sum(hours * dist_coast_km) / tot else NA_real_,
+      hhi         = sum(sh^2),
+      n_active    = sum(hours > 0),
+      hours       = tot,
+      mhw_exp     = sum(w * mhw_days, na.rm = TRUE) / sum(w),
+      sst_anom    = mean(sst_anom, na.rm = TRUE))
+  }, by = .(region, month)]
+  out[, time_id := as.integer(factor(month, levels = sort(unique(month))))]
+  mfdc_log(sprintf("Painel regiao x mes: %d linhas, %d regioes",
+                   nrow(out), data.table::uniqueN(out$region)), file = log_file)
+  out[]
+}
+
 #' Painel completo de uma resolucao.
 #' eff: mfdc_effort_by_cell; cells: mfdc_grid_cells + dist + region;
 #' mhw_px: mfdc_mhw_monthly.
