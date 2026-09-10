@@ -69,6 +69,50 @@ mfdc_main_models <- function(panel, conley_cutoff_km = 200, log_file = NULL) {
   )
 }
 
+#' Heterogeneidade: efeito por regiao e por arte de pesca.
+#' panel_gear vem de mfdc_build_panel_gear (celula x mes x arte).
+mfdc_heterogeneity_models <- function(panel, panel_gear, conley_cutoff_km = 200,
+                                      log_file = NULL) {
+  p <- mfdc_prep_panel(panel)
+  pg <- mfdc_prep_panel(panel_gear)
+  pg[, cell_gear := paste(cell, gear, sep = "_")]
+
+  models <- list(
+    by_region = fixest::fepois(
+      hours ~ i(region, mhw_days) + sst_anom |
+        cell + month + region^month_of_year, data = p),
+    by_gear = fixest::fepois(
+      hours ~ i(gear, mhw_days) + sst_anom |
+        cell_gear + month + region^month_of_year, data = pg),
+    # distancia da costa: acima/abaixo da mediana
+    by_distance = fixest::fepois(
+      hours ~ i(far_coast, mhw_days) + sst_anom |
+        cell + month + region^month_of_year,
+      data = p[, far_coast := data.table::fifelse(
+        dist_coast_km > stats::median(dist_coast_km, na.rm = TRUE),
+        "offshore", "nearshore")])
+  )
+  sums <- lapply(models, mfdc_vcov_summary, cutoff_km = conley_cutoff_km,
+                 log_file = log_file)
+  coefs <- data.table::rbindlist(lapply(names(sums), function(nm) {
+    ct <- as.data.frame(sums[[nm]]$sum$coeftable)
+    data.table::data.table(model = nm, term = rownames(ct), ct,
+                           vcov = sums[[nm]]$vcov)
+  }), fill = TRUE)
+  list(summaries = lapply(sums, `[[`, "sum"), coefs = coefs,
+       n_gear_obs = nrow(pg))
+}
+
+mfdc_save_heterogeneity <- function(het, dir_models, dir_tables) {
+  f1 <- file.path(dir_models, "heterogeneity_res4.rds")
+  saveRDS(het, f1)
+  f2 <- file.path(dir_tables, "heterogeneity_etable.txt")
+  writeLines(capture.output(fixest::etable(het$summaries)), f2)
+  f3 <- file.path(dir_tables, "heterogeneity_coefs.csv")
+  data.table::fwrite(het$coefs, f3)
+  c(f1, f2, f3)
+}
+
 #' Salva artefatos dos modelos (RDS + coeficientes CSV + etable txt).
 mfdc_save_models <- function(res_obj, dir_models, dir_tables) {
   dir.create(dir_models, recursive = TRUE, showWarnings = FALSE)

@@ -16,7 +16,8 @@ for (f in list.files("R", pattern = "\\.R$", full.names = TRUE)) source(f)
 
 tar_option_set(
   packages = c("data.table", "yaml", "checkmate", "arrow", "sf", "h3jsr",
-               "ncdf4", "heatwaveR", "curl"),
+               "ncdf4", "heatwaveR", "curl", "Matrix", "fixest", "ggplot2",
+               "patchwork"),
   format = "rds",
   seed = 20260903
 )
@@ -106,7 +107,7 @@ list(
   tar_target(dyn_r4, mfdc_dynamic_models(panel_r4, 200, LOGF)),
   tar_target(dyn_r4_files, mfdc_save_dynamic(dyn_r4,
     "outputs/models", "outputs/tables"), format = "file"),
-  tar_target(spill_r4, mfdc_spatial_models(panel_r4, dist_km = 60,
+  tar_target(spill_r4, mfdc_spatial_models(panel_r4,
     conley_cutoff_km = 200, log_file = LOGF)),
   tar_target(spill_r4_files, mfdc_save_spatial(spill_r4,
     "outputs/models", "outputs/tables"), format = "file"),
@@ -132,8 +133,29 @@ list(
   tar_target(fig_maps, mfdc_fig_maps(panel_r4,
     "outputs/figures/fig_maps_effort_mhw.png"), format = "file"),
   tar_target(fig_ts, mfdc_fig_timeseries(panel_r4,
-    "outputs/figures/fig_timeseries.png"), format = "file")
+    "outputs/figures/fig_timeseries.png"), format = "file"),
 
-  # TODO(fase 4): tabelas finais do artigo (R/17, modelsummary->tex),
-  # dashboard (R/18), tar_quarto(manuscript).
+  # ---- 11. Heterogeneidade (regiao, arte de pesca, distancia) ------------
+  tar_target(gear_classes, mfdc_gear_classes(gfw)),
+  tar_target(eff_gear_r4, mfdc_effort_by_cell_gear(gfw, 4L,
+    gear_classes$keep, LOGF)),
+  tar_target(panel_gear_r4, mfdc_build_panel_gear(eff_gear_r4, cells_r4,
+    mhw_px, months_all, LOGF)),
+  tar_target(het_r4, mfdc_heterogeneity_models(panel_r4, panel_gear_r4,
+    200, LOGF)),
+  tar_target(het_files, mfdc_save_heterogeneity(het_r4,
+    "outputs/models", "outputs/tables"), format = "file"),
+
+  # ---- 12. Descritivas, tabelas LaTeX e digest de resultados -------------
+  tar_target(descriptives, mfdc_descriptives(panel_r4, gear_classes$table,
+    "outputs/tables/descriptives_by_region.csv", LOGF)),
+  tar_target(tex_tables, mfdc_build_tables(models_r4, dyn_r4, spill_r4,
+    rob_main, list(rob_altdef), het_r4, descriptives, "outputs/tables"),
+    format = "file"),
+  tar_target(results_digest, mfdc_results_digest(models_r4, dyn_r4, spill_r4,
+    rob_main, list(rob_altdef), het_r4, quality,
+    "outputs/tables/RESULTS_DIGEST.md"), format = "file")
+
+  # TODO(fase 5): dashboard (R/18); manuscrito e prosa escritos pelo autor
+  # (politica de IA em docs/AI_POLICY_AND_REPRODUCIBILITY.md).
 )

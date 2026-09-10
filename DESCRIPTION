@@ -37,7 +37,9 @@ Imports:
     scales,
     h3jsr,
     gfwr,
-    validate
+    validate,
+    Matrix,
+    ncdf4
 Suggests:
     quarto
 Note: Fase 2 instalada em 2026-09-03 (scripts/00b) — pacotes movidos de
