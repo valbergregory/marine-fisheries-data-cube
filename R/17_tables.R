@@ -97,11 +97,22 @@ mfdc_results_digest <- function(models, dyn, spill, rob, alt, het, quality,
       extras$nonlin$coefs[grepl("_bin::", term),
         sprintf("- %s: %.4f (SE %.4f, p=%.3g)", term, b, se, p)])
     if (!is.null(extras$placebos)) add <- c(add, "", "## Placebos",
-      extras$placebos$temporal_coefs[grepl("mhw", term),
-        sprintf("- 12-month lead: %.4f (SE %.4f, p=%.3g)", b, se, p)],
+      extras$placebos$temporal_coefs[grepl("^f[(]", term),
+        sprintf("- 12-month lead UNCONDITIONAL (proxies persistent MHW regimes; not a valid test): %.4f (SE %.4f, p=%.3g)", b, se, p)],
+      if (!is.null(extras$lead12)) extras$lead12$coefs[grepl("^f[(]", term),
+        sprintf("- 12-month lead CONDITIONAL on lags 0-6 (valid placebo): %.4f (SE %.4f, p=%.3g)", b, se, p)],
       extras$placebos$permutation[, sprintf(
         "- spatial permutation: observed %.4f vs perm mean %.4f (sd %.4f), p_rand=%.3f, 95%% perm range [%.4f, %.4f]",
         b_obs, perm_mean, perm_sd, p_rand, perm_q025, perm_q975)])
+    if (!is.null(extras$celltrend)) add <- c(add, "",
+      "## Cell-specific linear trends (D19) — placebo-consistent specification",
+      extras$celltrend$coefs[model == "main_celltrend" & term == "mhw_days",
+        sprintf("- main effect with cell trends: %.4f (SE %.4f, p=%.3g)", b, se, p)],
+      extras$celltrend$coefs[model == "lead12_celltrend" & grepl("^f[(]", term),
+        sprintf("- 12-month lead with cell trends: %.4f (SE %.4f, p=%.3g)", b, se, p)],
+      extras$celltrend$cumulative[, sprintf(
+        "- cumulative lags 0-6 with cell trends: %.4f (SE %.4f, p=%.3g; 95%% CI %.4f to %.4f)",
+        b, se, p, lo, hi)])
     if (!is.null(extras$exclusions)) add <- c(add, "", "## Sample exclusions",
       extras$exclusions$coefs[term == "mhw_days",
         sprintf("- %s: %.4f (SE %.4f, p=%.3g)", model, b, se, p)])

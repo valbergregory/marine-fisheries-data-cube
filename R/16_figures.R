@@ -24,15 +24,15 @@ mfdc_fig_dose_response <- function(nonlin, out_png) {
            gt_15 = "> 1.5", d0 = "0 (ref)", d1_4 = "1-4", d5_9 = "5-9",
            d10_19 = "10-19", d20p = "20+")
   d <- data.table::copy(nonlin$coefs)[grepl("_bin::", term)]
-  d[, key := sub(".*_bin::", "", term)]
+  d[, bin := sub(".*_bin::", "", term)]
   d[, panel := data.table::fifelse(grepl("^anom", term),
       "SST anomaly bin (degC)", "MHW days in month")]
-  d[, key := factor(lab[key], levels = unname(lab))]
+  d[, bin := factor(lab[bin], levels = unname(lab))]
   ref <- data.table::data.table(
-    key = factor(c("-0.5..0 (ref)", "0 (ref)"), levels = unname(lab)),
+    bin = factor(c("-0.5..0 (ref)", "0 (ref)"), levels = unname(lab)),
     b = 0, se = 0, panel = c("SST anomaly bin (degC)", "MHW days in month"))
-  d <- rbind(d[, .(key, b, se, panel)], ref)
-  g <- ggplot2::ggplot(d, ggplot2::aes(key, b)) +
+  d <- rbind(d[, .(bin, b, se, panel)], ref)
+  g <- ggplot2::ggplot(d, ggplot2::aes(bin, b)) +
     ggplot2::geom_hline(yintercept = 0, linetype = 2, colour = "grey50") +
     ggplot2::geom_pointrange(ggplot2::aes(ymin = b - 1.96 * se,
                                           ymax = b + 1.96 * se)) +

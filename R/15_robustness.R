@@ -119,3 +119,52 @@ mfdc_save_robustness <- function(rob, alt_list, dir_models, dir_tables) {
     c(list(rob$coefs), lapply(alt_list, `[[`, "coefs")), fill = TRUE), f3)
   c(f1, f2, f3)
 }
+
+#' Placebo temporal CORRETO: lead de 12 meses condicional as defasagens 0-6.
+#' Sem condicionar, f(mhw,12) apenas proxia a exposicao corrente (persistencia
+#' interanual das MHWs) e "parece" significativo — ver decisions_log D19.
+mfdc_placebo_lead12 <- function(panel, conley_cutoff_km = 200, log_file = NULL) {
+  p <- mfdc_prep_panel(panel)
+  data.table::setkey(p, cell, time_id)
+  fe <- "cell + month + region^month_of_year"
+  m <- fixest::fepois(stats::as.formula(paste(
+    "hours ~ f(mhw_days, 12) + l(mhw_days, 0:6) + sst_anom |", fe)),
+    data = p, panel.id = c("cell", "time_id"))
+  s <- mfdc_vcov_summary(m, conley_cutoff_km, log_file)
+  ct <- mfdc_coef_table(list(placebo_lead12_conditional = s))
+  mfdc_log(sprintf("Placebo lead-12 condicional: %.4f (p=%.3g)",
+    ct[grepl("^f[(]", term), b], ct[grepl("^f[(]", term), p]), file = log_file)
+  list(summary = s$sum, coefs = ct)
+}
+
+#' Tendencias lineares especificas de celula (varying slopes cell[time_id]).
+#' Motivacao (D19): a exposicao a MHW cresce fortemente no periodo (0,9 dia/mes
+#' em 2013 -> 13,3 em 2024); celulas com exposicao crescente e esforco em
+#' declinio por outras razoes geram um lead-12 espurio. Com tendencias por
+#' celula o lead-12 some e o efeito principal cai a cerca da metade.
+mfdc_celltrend_models <- function(panel, conley_cutoff_km = 200, log_file = NULL) {
+  p <- mfdc_prep_panel(panel)
+  data.table::setkey(p, cell, time_id)
+  fe_ct <- "cell[time_id] + month + region^month_of_year"
+  models <- list(
+    main_celltrend = fixest::fepois(stats::as.formula(paste(
+      "hours ~ mhw_days + sst_anom |", fe_ct)), data = p),
+    lead12_celltrend = fixest::fepois(stats::as.formula(paste(
+      "hours ~ f(mhw_days, 12) + l(mhw_days, 0:6) + sst_anom |", fe_ct)),
+      data = p, panel.id = c("cell", "time_id")),
+    lags6_celltrend = fixest::fepois(stats::as.formula(paste(
+      "hours ~ l(mhw_days, 0:6) + sst_anom |", fe_ct)),
+      data = p, panel.id = c("cell", "time_id"))
+  )
+  sums <- lapply(models, mfdc_vcov_summary, cutoff_km = conley_cutoff_km,
+                 log_file = log_file)
+  ct <- mfdc_coef_table(sums)
+  cum <- mfdc_cumulative_effect(sums$lags6_celltrend$sum, "mhw_days")
+  mfdc_log(sprintf("Tendencias por celula: principal %.4f (p=%.3g); lead-12 %.4f (p=%.3g); acumulado %.4f (p=%.3g)",
+    ct[model == "main_celltrend" & term == "mhw_days", b],
+    ct[model == "main_celltrend" & term == "mhw_days", p],
+    ct[model == "lead12_celltrend" & grepl("^f[(]", term), b],
+    ct[model == "lead12_celltrend" & grepl("^f[(]", term), p],
+    cum$b, cum$p), file = log_file)
+  list(summaries = lapply(sums, `[[`, "sum"), coefs = ct, cumulative = cum)
+}
