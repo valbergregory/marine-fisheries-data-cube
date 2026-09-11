@@ -89,6 +89,17 @@ mfdc_numbers_tex <- function(models, dyn, spill, rob, alt, het, quality,
     if (!is.null(extra$placebo)) num <- c(num, list(
       nPermutations = as.character(extra$placebo$n_perm[1]),
       pPermutation  = formatC(extra$placebo$p_rand[1], format = "f", digits = 3)))
+    if (!is.null(extra$lead12)) { r <- extra$lead12[grepl("^f[(]", term)]
+      num <- c(num, list(bLeadTwelve = formatC(r$b[1], format = "f", digits = 4),
+                         pLeadTwelve = formatC(r$p[1], format = "f", digits = 3))) }
+    if (!is.null(extra$celltrend)) { ct <- extra$celltrend$coefs
+      num <- c(num, list(
+        bMhwCellTrend    = formatC(ct[model == "main_celltrend" & term == "mhw_days", b][1], format = "f", digits = 4),
+        pMhwCellTrend    = formatC(ct[model == "main_celltrend" & term == "mhw_days", p][1], format = "f", digits = 3),
+        bLeadTwelveCT    = formatC(ct[model == "lead12_celltrend" & grepl("^f[(]", term), b][1], format = "f", digits = 4),
+        pLeadTwelveCT    = formatC(ct[model == "lead12_celltrend" & grepl("^f[(]", term), p][1], format = "f", digits = 3),
+        bCumSixCT        = formatC(extra$celltrend$cumulative$b[1], format = "f", digits = 4),
+        pCumSixCT        = formatC(extra$celltrend$cumulative$p[1], format = "f", digits = 3))) }
     if (!is.null(extra$moran)) num <- c(num, list(
       moranI      = formatC(extra$moran$moran_I[1], format = "f", digits = 4),
       pMoran      = formatC(extra$moran$p_perm[1], format = "f", digits = 3)))

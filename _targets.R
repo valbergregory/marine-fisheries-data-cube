@@ -166,6 +166,8 @@ list(
   tar_target(placebos, mfdc_placebo_models(panel_r4, n_perm = 50L,
     seed = cfg$seed, log_file = LOGF)),
   tar_target(exclusions, mfdc_exclusion_models(panel_r4, log_file = LOGF)),
+  tar_target(placebo_lead12, mfdc_placebo_lead12(panel_r4, 200, LOGF)),
+  tar_target(celltrend, mfdc_celltrend_models(panel_r4, 200, LOGF)),
   tar_target(rm_panel, mfdc_build_region_month(panel_r4, LOGF)),
   tar_target(relocation, mfdc_relocation_models(rm_panel, LOGF)),
   tar_target(moran, {
@@ -185,8 +187,10 @@ list(
         "outputs/tables/tab08_relocation.tex",
         "Reallocation outcomes at the region-month level", "tab:reloc"),
       mfdc_write_tex_table(rbind(
-        placebos$temporal_coefs[, .(test = model, term, b = round(b, 4),
-          se = round(se, 4), p = round(p, 4))],
+        placebo_lead12$coefs[grepl("^f[(]", term), .(test = model, term,
+          b = round(b, 4), se = round(se, 4), p = round(p, 4))],
+        placebos$temporal_coefs[grepl("^f[(]", term), .(test = "placebo_lead12_unconditional",
+          term, b = round(b, 4), se = round(se, 4), p = round(p, 4))],
         placebos$permutation[, .(test = "spatial_permutation",
           term = sprintf("%d draws", n_perm), b = round(b_obs, 4),
           se = round(perm_sd, 4), p = round(p_rand, 4))], fill = TRUE),
@@ -195,7 +199,11 @@ list(
       mfdc_write_tex_table(exclusions$coefs[term == "mhw_days",
         .(model, b = round(b, 4), se = round(se, 4), p = round(p, 4))],
         "outputs/tables/tab10_exclusions.tex",
-        "Sample exclusions: coastal cells and low-coverage cells", "tab:excl"))
+        "Sample exclusions: coastal cells and low-coverage cells", "tab:excl"),
+      mfdc_tex_models(celltrend$summaries, "outputs/tables/tab11_cell_trends.tex",
+        "Cell-specific linear trends: main effect, 12-month lead placebo and lags",
+        "tab:celltrend",
+        notes = "Varying slopes cell x linear time. Conley SE (200 km)."))
     fs
   }, format = "file"),
 
@@ -232,6 +240,7 @@ list(
     rob_main, alt_defs, het_r4, quality,
     "outputs/tables/RESULTS_DIGEST.md",
     extras = list(cum = cum_effect, nonlin = nonlin_r4, placebos = placebos,
+                  lead12 = placebo_lead12, celltrend = celltrend,
                   exclusions = exclusions, relocation = relocation,
                   moran = moran)), format = "file"),
 
@@ -241,6 +250,7 @@ list(
     c(tex_tables, extra_tables),
     c(fig_event, fig_maps, fig_ts, fig_dose, fig_perm),
     extra_numbers = list(cum = cum_effect, placebo = placebos$permutation,
+                         lead12 = placebo_lead12$coefs, celltrend = celltrend,
                          moran = moran, reloc = relocation$coefs),
     out_dir = "outputs/overleaf", log_file = LOGF), format = "file")
 

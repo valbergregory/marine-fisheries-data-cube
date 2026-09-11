@@ -15,7 +15,7 @@ local({
   log_file <- mfdc_open_log("90_export_overleaf")
   mfdc_log("== INICIO export Overleaf ==", file = log_file)
   on.exit(mfdc_log("== FIM ==", file = log_file), add = TRUE)
-  targets::tar_make(names = "overleaf", reporter = "timestamp")
+  targets::tar_make(names = c("results_digest", "overleaf"), reporter = "timestamp")
   zipf <- file.path("outputs", sprintf("overleaf_%s.zip", format(Sys.Date(), "%Y%m%d")))
   old <- setwd("outputs/overleaf")
   utils::zip(file.path("..", "..", zipf), list.files(".", recursive = TRUE))

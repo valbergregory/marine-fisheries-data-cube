@@ -1,0 +1,54 @@
+
+\begin{table}[htbp]
+   \caption{\label{tab:celltrend} Cell-specific linear trends: main effect, 12-month lead placebo and lags}
+   \centering
+   \begin{tabular}{lccc}
+      \tabularnewline \midrule \midrule
+      Dependent Variable: & \multicolumn{3}{c}{Fishing hours}\\
+      Model:               & (1)            & (2)           & (3)\\  
+      \midrule
+      \emph{Variables}\\
+      MHW days             & -0.0046$^{**}$ &               &   \\   
+                           & (0.0022)       &               &   \\   
+      SST anomaly          & 0.1263$^{***}$ & 0.1164$^{**}$ & 0.1260$^{***}$\\   
+                           & (0.0292)       & (0.0480)      & (0.0277)\\   
+      f(mhw\_days, 12)     &                & -0.0020       &   \\   
+                           &                & (0.0018)      &   \\   
+      l(mhw\_days, 0)      &                & -0.0026       & -0.0045$^{***}$\\   
+                           &                & (0.0028)      & (0.0017)\\   
+      l(mhw\_days, 1)      &                & 0.0029        & 0.0007\\   
+                           &                & (0.0027)      & (0.0025)\\   
+      l(mhw\_days, 2)      &                & -0.0038$^{*}$ & -0.0039$^{***}$\\   
+                           &                & (0.0022)      & (0.0015)\\   
+      l(mhw\_days, 3)      &                & 0.0042$^{*}$  & 0.0043$^{*}$\\   
+                           &                & (0.0022)      & (0.0023)\\   
+      l(mhw\_days, 4)      &                & -0.0032       & -0.0026\\   
+                           &                & (0.0029)      & (0.0023)\\   
+      l(mhw\_days, 5)      &                & -0.0013       & -0.0004\\   
+                           &                & (0.0023)      & (0.0020)\\   
+      l(mhw\_days, 6)      &                & 0.0040$^{**}$ & 0.0007\\   
+                           &                & (0.0018)      & (0.0021)\\   
+      \midrule
+      \emph{Fixed-effects}\\
+      Cell                 & Yes            & Yes           & Yes\\  
+      Month                & Yes            & Yes           & Yes\\  
+      Region-Month of year & Yes            & Yes           & Yes\\  
+      \midrule
+      \emph{Varying Slopes}\\
+      time\_id (Cell)      & Yes            & Yes           & Yes\\  
+      \midrule
+      \emph{Fit statistics}\\
+      Observations         & 686,160        & 591,318       & 657,432\\  
+      Squared Correlation  & 0.53572        & 0.53244       & 0.53694\\  
+      Pseudo R$^2$         & 0.76987        & 0.76121       & 0.77025\\  
+      BIC                  & 13,528,193.4   & 11,286,270.8  & 13,318,216.7\\  
+      \midrule \midrule
+      \multicolumn{4}{l}{\emph{Conley (200km) standard-errors in parentheses}}\\
+      \multicolumn{4}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
+   \end{tabular}
+   
+   \par \raggedright 
+   Varying slopes cell x linear time. Conley SE (200 km).
+\end{table}
+
+
