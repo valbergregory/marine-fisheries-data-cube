@@ -60,10 +60,18 @@ that heatwaves compound the effects of gradual warming on fisheries
 (Cheung and Frölicher, 2020).
 
 Paragraph 2 — the gap. Most evidence concerns temperate stocks and relies on
-landings or stock assessments at annual or seasonal resolution. Much less is
-known about how fleets themselves react — where and how much they fish —
-while a heatwave unfolds, and almost nothing for tropical and subtropical
-fisheries of the South Atlantic. Brazil is a demanding case: it has no
+landings or stock assessments at annual or seasonal resolution. Climate
+shocks that trigger closures impose costs that are mediated by the diversity
+of fishing portfolios (Fisher et al., 2021), and fleets are known to
+redistribute laterally in response to environmental exclusion — the classic
+case being the Gulf of Mexico hypoxic zone (Smith et al., 2014). Recent
+AIS-based work shows that marine heatwaves redistribute pelagic fleets at
+basin scale, with the spatial extent of the heatwave mattering more than its
+intensity (Farchadi et al., 2024). Much less is known about the
+high-frequency, cell-level response of a tropical fleet, and almost nothing
+for the South Atlantic — where heatwaves have a documented regional driver,
+the atmospheric blocking that also causes South American droughts
+(Rodrigues et al., 2019). Brazil is a demanding case: it has no
 continuous national fisheries statistics since the discontinuation of the
 official series in the 2010s, so behavioural responses cannot be studied
 from landings at all. [AUTHOR: one or two sentences on the Brazilian
@@ -101,7 +109,13 @@ behaviour from AIS tracks (Kroodsma et al., 2018) — aggregated monthly on a
 0.1° grid, by flag and gear type. We query the box −54°E to −25°E, −35°N to
 6°N for `\panelStart{}`–`\panelEnd{}` and map each 0.1° centre to an H3
 cell. AIS coverage is skewed toward larger vessels; the artisanal fleet is
-essentially absent. All inferences therefore concern the AIS-tracked fleet,
+essentially absent. Apparent fishing hours are also a classifier output:
+validation against on-board records for Northeast Atlantic pelagic fleets
+shows that low-speed searching can be recorded as fishing, overstating
+gear-deployment time (Hintzen et al., 2025); cell fixed effects absorb the
+time-invariant part of this error and gear-specific estimates address its
+fleet-dependent part, but the outcome should be read as "inferred fishing
+activity". All inferences therefore concern the AIS-tracked fleet,
 which in Brazil is dominated by drifting longliners (Table 1, gear
 composition). [AUTHOR: state clearly in one sentence that this is a
 population statement, not a sampling caveat.]
