@@ -31,8 +31,9 @@ mfdc_descriptives <- function(panel, gear_tbl, out_csv, log_file = NULL) {
 
 #' Escritor .tex minimalista (sem dependencias extras): tabular booktabs-like.
 mfdc_write_tex_table <- function(dt, file, caption, label, digits = 3) {
+  esc <- function(x) gsub("([%_&#])", "\\\\\\1", x)
   fmt <- function(x) if (is.numeric(x)) formatC(x, format = "fg", digits = digits,
-                                                big.mark = ",") else as.character(x)
+                                                big.mark = ",") else esc(as.character(x))
   body <- apply(dt, 1, function(r) paste(vapply(r, fmt, character(1)), collapse = " & "))
   tex <- c(
     "\\begin{table}[htbp]", "\\centering",
