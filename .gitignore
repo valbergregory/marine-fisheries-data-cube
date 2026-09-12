@@ -64,3 +64,4 @@ Thumbs.db
 # --- Overleaf export (regenerado pelo pipeline) ---
 outputs/overleaf/
 outputs/overleaf_*.zip
+outputs/manuscript_draft_*.pdf

@@ -251,6 +251,7 @@ list(
     c(fig_event, fig_maps, fig_ts, fig_dose, fig_perm),
     extra_numbers = list(cum = cum_effect, placebo = placebos$permutation,
                          lead12 = placebo_lead12$coefs, celltrend = celltrend,
+                         nonlin = nonlin_r4,
                          moran = moran, reloc = relocation$coefs),
     out_dir = "outputs/overleaf", log_file = LOGF), format = "file")
 

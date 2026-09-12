@@ -75,6 +75,32 @@ mfdc_numbers_tex <- function(models, dyn, spill, rob, alt, het, quality,
     bMhwPninetyfive = cf(alt[[1]]$coefs, "mhw_p95", "mhw_days"),
     nRegions        = as.character(nrow(descriptives) - 1L)
   )
+  # heterogeneidade, faixas e defasagens (macros p/ a prosa)
+  hc <- function(m, pat, what = "b", d = 4) {
+    r <- het$coefs[model == m & grepl(pat, term, fixed = TRUE)]
+    if (!nrow(r)) return("[missing]"); formatC(r[[what]][1], format = "f", digits = d) }
+  num <- c(num, list(
+    bNorth = hc("by_region", "Norte:"), pNorth = hc("by_region", "Norte:", "p", 3),
+    bNortheast = hc("by_region", "Nordeste:"), pNortheast = hc("by_region", "Nordeste:", "p", 3),
+    bSoutheast = hc("by_region", "Sudeste:"), pSoutheast = hc("by_region", "Sudeste:", "p", 3),
+    bSouth = hc("by_region", "Sul:"), pSouth = hc("by_region", "Sul:", "p", 3),
+    bOffshore = hc("by_distance", "offshore:"), pOffshore = hc("by_distance", "offshore:", "p", 3),
+    bNearshore = hc("by_distance", "nearshore:"), pNearshore = hc("by_distance", "nearshore:", "p", 3),
+    bDriftLongline = hc("by_gear", "drifting_longlines:"), pDriftLongline = hc("by_gear", "drifting_longlines:", "p", 3),
+    bSetLongline = hc("by_gear", "set_longlines:"), pSetLongline = hc("by_gear", "set_longlines:", "p", 3),
+    bTrawl = hc("by_gear", "trawlers:"), pTrawl = hc("by_gear", "trawlers:", "p", 3)))
+  ev <- function(h, what = "b", d = 4) { r <- dyn$event_study[horizon == h]
+    if (!nrow(r)) return("[missing]"); formatC(r[[what]][1], format = "f", digits = d) }
+  num <- c(num, list(
+    bLagZero = ev(0), pLagZero = ev(0, "p", 3), bLagTwo = ev(2), pLagTwo = ev(2, "p", 3),
+    bLagFour = ev(4), pLagFour = ev(4, "p", 3), bLagSix = ev(6), pLagSix = ev(6, "p", 3),
+    bLeadOne = ev(-1), pLeadOne = ev(-1, "p", 3), bLeadTwo = ev(-2), pLeadTwo = ev(-2, "p", 3),
+    bLeadThree = ev(-3), pLeadThree = ev(-3, "p", 3),
+    bMhwNoControl = cf(models$coefs, "ppml_mhw", "mhw_days"),
+    pMhwNoControl = cf(models$coefs, "ppml_mhw", "mhw_days", "p", 3),
+    bLogOnePlus = cf(models$coefs, "log1p_rob", "mhw_days"),
+    bMaxIntensity = cf(models$coefs, "ppml_intensity", "mhw_max_int"),
+    pMaxIntensity = cf(models$coefs, "ppml_intensity", "mhw_max_int", "p", 3)))
   # alternativas 2 e 3 (duracao 10 dias; climatologia 1982-2011)
   if (length(alt) >= 2) num$bMhwDurTen <- cf(alt[[2]]$coefs, "mhw_dur10", "mhw_days")
   if (length(alt) >= 3) num$bMhwClimEarly <-
@@ -100,6 +126,15 @@ mfdc_numbers_tex <- function(models, dyn, spill, rob, alt, het, quality,
         pLeadTwelveCT    = formatC(ct[model == "lead12_celltrend" & grepl("^f[(]", term), p][1], format = "f", digits = 3),
         bCumSixCT        = formatC(extra$celltrend$cumulative$b[1], format = "f", digits = 4),
         pCumSixCT        = formatC(extra$celltrend$cumulative$p[1], format = "f", digits = 3))) }
+    if (!is.null(extra$nonlin)) { nb <- function(pat, what = "b", d = 4) {
+        r <- extra$nonlin$coefs[grepl(pat, term, fixed = TRUE)]
+        if (!nrow(r)) return("[missing]"); formatC(r[[what]][1], format = "f", digits = d) }
+      num <- c(num, list(
+        bBinTwentyPlus = nb("d20p"), pBinTwentyPlus = nb("d20p", "p", 3),
+        bBinTenNineteen = nb("d10_19"), pBinTenNineteen = nb("d10_19", "p", 3),
+        bBinFiveNine = nb("d5_9"), pBinFiveNine = nb("d5_9", "p", 3),
+        bBinOneFour = nb("d1_4"), pBinOneFour = nb("d1_4", "p", 3),
+        pctBinTwentyPlus = formatC(100 * (exp(extra$nonlin$coefs[grepl("d20p", term, fixed = TRUE), b][1]) - 1), format = "f", digits = 1))) }
     if (!is.null(extra$moran)) num <- c(num, list(
       moranI      = formatC(extra$moran$moran_I[1], format = "f", digits = 4),
       pMoran      = formatC(extra$moran$p_perm[1], format = "f", digits = 3)))

@@ -1,5 +1,5 @@
 # Results digest (machine-generated; prose is written by the author)
-Generated: 2026-09-11 15:08
+Generated: 2026-09-12 15:21
 
 ## Panel
 - Grid: H3 res 4; obs = 686,160; cells = 4,765
