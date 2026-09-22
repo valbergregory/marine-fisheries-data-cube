@@ -22,7 +22,7 @@ desses artefatos.
 | # | Pergunta | Critério | Resposta | Veredito |
 |---|---|---|---|---|
 | 1 | Acesso reproduzível? | script de ponta a ponta sem intervenção | Sim: GFW + OISST + MHW + painel em execução única, com retries e cache (runtime 44,7 min). Instabilidade da NOAA exigiu D10→D13, já codificada | ✅ |
-| 2 | Licença permite pesquisa e redistribuição? | agregados publicáveis | OISST: domínio público. GFW: CC BY-SA 4.0 para dados; **pendência não-bloqueante:** ler os termos da API v3 antes de publicar agregados derivados no repositório/dashboard | ✅ c/ ação |
+| 2 | Licença permite pesquisa e redistribuição? | agregados publicáveis | OISST: domínio público. GFW: CC BY-NC 4.0 via API (termos lidos em 2026-09-22 — ver gfw_api_terms.md; o "CC BY-SA" original desta linha estava errado) | ✅ c/ ação |
 | 3 | Períodos compatíveis? | interseção ≥ 8 anos | Sim: GFW cobre 24/24 meses do piloto; OISST 1991–2023 contínuo (12.053 dias, **0 lacunas**). Estudo completo: GFW 2012+ ∩ OISST → ≥ 12 anos | ✅ |
 | 4 | Resoluções cruzáveis? | mapeamento sem ambiguidade dominante | Sim: mediana de 1 célula GFW 0,1° por H3 (máx 4); 1 H3 por pixel SST (máx 3); distância centróide→pixel mediana 11,2 km (máx 18). Ressalva: H3 res 5 (~252 km²) é mais fina que o pixel SST (~770 km²) — células vizinhas compartilham pixel (tratável com Conley; res 4 inverteria a razão) | ✅ c/ ressalva |
 | 5 | % células-mês com esforço > 0? | ≥ ~25% | **5,2% — REPROVADO no critério.** 64,3% das células têm esforço em algum mês; 23/24 meses têm esforço. Mesmo condicional às células com esforço, ~8% dos meses são positivos. Esforço total: só 4.752 h em 2 anos no bbox | ❌ |

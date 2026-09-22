@@ -129,7 +129,7 @@ condicional aos efeitos fixos, a ser argumentada e testada (leads/placebos).
 ## 9. Ética, licenças e limitações declaradas
 
 - Dados GFW: agregados, sem identificação individual em outputs públicos;
-  respeitar CC BY-SA e termos da API.
+  respeitar CC BY-NC 4.0 e termos da API (docs/gfw_api_terms.md).
 - Sub-representação da frota artesanal no AIS: limitação central, declarada
   na introdução e nas conclusões — os resultados valem para a frota rastreada.
 - "Apparent fishing effort" é inferência de modelo (não esforço declarado);

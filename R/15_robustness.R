@@ -168,3 +168,37 @@ mfdc_celltrend_models <- function(panel, conley_cutoff_km = 200, log_file = NULL
     cum$b, cum$p), file = log_file)
   list(summaries = lapply(sums, `[[`, "sum"), coefs = ct, cumulative = cum)
 }
+
+#' Limiar de dias de MHW (10/20/30+) e bins, com e sem tendencias por celula.
+#' Pergunta: o salto nao-linear em meses com 20+ dias (tab:nonlin) sobrevive
+#' a especificacao conservadora de D19? Cada limiar entra como dummy isolada
+#' (mhw_days >= k) condicional a sst_anom; os bins repetem mfdc_nonlinear_models.
+mfdc_threshold_models <- function(panel, thresholds = c(10L, 20L, 30L),
+                                  conley_cutoff_km = 200, log_file = NULL) {
+  p <- mfdc_prep_panel(panel)
+  data.table::setkey(p, cell, time_id)
+  for (k in thresholds) p[, (sprintf("mhw_ge%d", k)) := as.integer(mhw_days >= k)]
+  p[, mhw_bin := factor(cut(mhw_days, c(-Inf, 0, 4, 9, 19, Inf),
+      labels = c("d0", "d1_4", "d5_9", "d10_19", "d20p")))]
+  fes <- c(base = "cell + month + region^month_of_year",
+           celltrend = "cell[time_id] + month + region^month_of_year")
+  models <- list()
+  for (nm in names(fes)) {
+    for (k in thresholds) models[[sprintf("ge%d_%s", k, nm)]] <- fixest::fepois(
+      stats::as.formula(sprintf("hours ~ mhw_ge%d + sst_anom | %s", k, fes[[nm]])),
+      data = p)
+    models[[sprintf("bins_%s", nm)]] <- fixest::fepois(stats::as.formula(paste(
+      "hours ~ i(mhw_bin, ref = 'd0') + sst_anom |", fes[[nm]])), data = p)
+  }
+  sums <- lapply(models, mfdc_vcov_summary, cutoff_km = conley_cutoff_km,
+                 log_file = log_file)
+  ct <- mfdc_coef_table(sums)
+  counts <- data.table::rbindlist(lapply(thresholds, function(k)
+    data.table::data.table(threshold = k,
+      n_cell_months = p[mhw_days >= k, .N],
+      share = p[, mean(mhw_days >= k, na.rm = TRUE)])))
+  for (i in seq_len(nrow(ct))) if (grepl("^mhw_ge|d20p", ct$term[i]))
+    mfdc_log(sprintf("Limiar %s / %s: %.4f (p=%.3g)", ct$model[i], ct$term[i],
+                     ct$b[i], ct$p[i]), file = log_file)
+  list(summaries = lapply(sums, `[[`, "sum"), coefs = ct, counts = counts)
+}

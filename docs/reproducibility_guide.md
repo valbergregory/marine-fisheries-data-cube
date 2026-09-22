@@ -26,7 +26,7 @@
 6. **Logs** — todo script em `scripts/` grava início/fim/sessionInfo em
    `outputs/logs/`.
 7. **Licenças e redistribuição** — agregados derivados da GFW respeitam
-   CC BY-SA (atribuição + share-alike); OISST é domínio público; WDPA (se
+   CC BY-NC 4.0 (atribuição + não comercial + mesmos termos; ver gfw_api_terms.md); OISST é domínio público; WDPA (se
    usada) não permite redistribuir os polígonos originais.
 
 ## Reconstrução do zero

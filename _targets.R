@@ -168,6 +168,7 @@ list(
   tar_target(exclusions, mfdc_exclusion_models(panel_r4, log_file = LOGF)),
   tar_target(placebo_lead12, mfdc_placebo_lead12(panel_r4, 200, LOGF)),
   tar_target(celltrend, mfdc_celltrend_models(panel_r4, 200, LOGF)),
+  tar_target(thresholds, mfdc_threshold_models(panel_r4, c(10L, 20L, 30L), 200, LOGF)),
   tar_target(rm_panel, mfdc_build_region_month(panel_r4, LOGF)),
   tar_target(relocation, mfdc_relocation_models(rm_panel, LOGF)),
   tar_target(moran, {
@@ -203,7 +204,12 @@ list(
       mfdc_tex_models(celltrend$summaries, "outputs/tables/tab11_cell_trends.tex",
         "Cell-specific linear trends: main effect, 12-month lead placebo and lags",
         "tab:celltrend",
-        notes = "Varying slopes cell x linear time. Conley SE (200 km)."))
+        notes = "Varying slopes cell x linear time. Conley SE (200 km)."),
+      mfdc_write_tex_table(thresholds$coefs[grepl("^mhw_ge|mhw_bin", term),
+        .(model, term, b = round(b, 4), se = round(se, 4), p = round(p, 4))],
+        "outputs/tables/tab12_thresholds.tex",
+        "MHW-day thresholds and bins with and without cell-specific trends",
+        "tab:thresholds"))
     fs
   }, format = "file"),
 
@@ -251,10 +257,13 @@ list(
     c(fig_event, fig_maps, fig_ts, fig_dose, fig_perm),
     extra_numbers = list(cum = cum_effect, placebo = placebos$permutation,
                          lead12 = placebo_lead12$coefs, celltrend = celltrend,
-                         nonlin = nonlin_r4,
+                         nonlin = nonlin_r4, thresholds = thresholds,
                          moran = moran, reloc = relocation$coefs),
-    out_dir = "outputs/overleaf", log_file = LOGF), format = "file")
+    out_dir = "outputs/overleaf", log_file = LOGF), format = "file"),
 
-  # TODO(fase 5): dashboard (R/18); prosa do artigo escrita pelo autor em
-  # Overleaf (politica em docs/AI_POLICY_AND_REPRODUCIBILITY.md).
+  # ---- 14. Dashboard (agregados CC BY-NC 4.0 para app/app.R) -------------
+  tar_target(dashboard_data, mfdc_dashboard_data(panel_r4,
+    "data/processed/dashboard", LOGF), format = "file")
+  # Prosa do artigo: escrita pelo autor em Overleaf
+  # (politica em docs/AI_POLICY_AND_REPRODUCIBILITY.md).
 )

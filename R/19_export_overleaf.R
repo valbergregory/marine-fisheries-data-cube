@@ -135,6 +135,19 @@ mfdc_numbers_tex <- function(models, dyn, spill, rob, alt, het, quality,
         bBinFiveNine = nb("d5_9"), pBinFiveNine = nb("d5_9", "p", 3),
         bBinOneFour = nb("d1_4"), pBinOneFour = nb("d1_4", "p", 3),
         pctBinTwentyPlus = formatC(100 * (exp(extra$nonlin$coefs[grepl("d20p", term, fixed = TRUE), b][1]) - 1), format = "f", digits = 1))) }
+    if (!is.null(extra$thresholds)) { th <- extra$thresholds$coefs
+      tg <- function(m, t, what = "b", d = 4) {
+        r <- th[model == m & grepl(t, term, fixed = TRUE)]
+        if (!nrow(r)) return("[missing]"); formatC(r[[what]][1], format = "f", digits = d) }
+      num <- c(num, list(
+        bGeTen = tg("ge10_base", "mhw_ge10"), pGeTen = tg("ge10_base", "mhw_ge10", "p", 3),
+        bGeTwenty = tg("ge20_base", "mhw_ge20"), pGeTwenty = tg("ge20_base", "mhw_ge20", "p", 3),
+        bGeThirty = tg("ge30_base", "mhw_ge30"), pGeThirty = tg("ge30_base", "mhw_ge30", "p", 3),
+        bGeTenCT = tg("ge10_celltrend", "mhw_ge10"), pGeTenCT = tg("ge10_celltrend", "mhw_ge10", "p", 3),
+        bGeTwentyCT = tg("ge20_celltrend", "mhw_ge20"), pGeTwentyCT = tg("ge20_celltrend", "mhw_ge20", "p", 3),
+        bGeThirtyCT = tg("ge30_celltrend", "mhw_ge30"), pGeThirtyCT = tg("ge30_celltrend", "mhw_ge30", "p", 3),
+        bBinTwentyPlusCT = tg("bins_celltrend", "d20p"), pBinTwentyPlusCT = tg("bins_celltrend", "d20p", "p", 3),
+        shareGeThirty = formatC(100 * extra$thresholds$counts[threshold == 30, share][1], format = "f", digits = 1))) }
     if (!is.null(extra$moran)) num <- c(num, list(
       moranI      = formatC(extra$moran$moran_I[1], format = "f", digits = 4),
       pMoran      = formatC(extra$moran$p_perm[1], format = "f", digits = 3)))

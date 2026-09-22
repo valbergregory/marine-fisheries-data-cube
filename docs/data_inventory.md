@@ -18,8 +18,8 @@ mínimas (HEAD/GET de poucos KB) — nenhum download em massa foi feito.
 - Conceito: *apparent fishing effort* (horas de pesca inferidas de AIS por
   modelo da GFW). Não é esforço declarado. Cobertura enviesada para
   embarcações ≥ ~15 m com AIS — a frota artesanal fica sub-representada.
-- Licença: CC BY-SA 4.0 para dados agregados; confirmar termos da API antes
-  de redistribuir agregados derivados.
+- Licença: CC BY-NC 4.0 (dados via API; ToS lidos em 2026-09-22 — ver gfw_api_terms.md);
+  agregados derivados só podem ser redistribuídos nos mesmos termos, com atribuição.
 
 ### 2. SST — NOAA OISST v2.1
 - **Status: ACESSÍVEL, SEM AUTENTICAÇÃO.**

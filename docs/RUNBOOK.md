@@ -57,8 +57,17 @@ readLines("outputs/tables/RESULTS_DIGEST.md")   # números correntes
 testthat::test_dir("tests/testthat")
 ```
 
-## 5. Estado do projeto
+## 5. Dashboard (protótipo Shiny)
 
-Decisões numeradas em [decisions_log.md](decisions_log.md) (D1–D17);
+```r
+targets::tar_make(names = "dashboard_data")   # agregados em data/processed/dashboard
+shiny::runApp("app")
+```
+Agregados célula × ano e região × mês, sob CC BY-NC 4.0 com a atribuição da
+GFW no rodapé e no CSV baixado ([gfw_api_terms.md](gfw_api_terms.md)).
+
+## 6. Estado do projeto
+
+Decisões numeradas em [decisions_log.md](decisions_log.md) (D1–D21);
 viabilidade em [feasibility_report.md](feasibility_report.md);
 próximos passos em [next_steps.md](next_steps.md).

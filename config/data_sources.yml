@@ -8,7 +8,7 @@ fishing_effort_gfw:
   url: "https://globalfishingwatch.org/our-apis/"
   documentacao: "https://globalfishingwatch.org/our-apis/documentation"
   cliente_r: "gfwr (GitHub: GlobalFishingWatch/gfwr — NAO esta no CRAN, verificado 2026-09-03)"
-  licenca: "CC BY-SA 4.0 (dados agregados); confirmar termos da API v3 antes de redistribuir"
+  licenca: "CC BY-NC 4.0 (dados via API v3; derivados nos mesmos termos, so nao comercial; atribuicao obrigatoria) — ToS lidos 2026-09-22, ver docs/gfw_api_terms.md"
   autenticacao: "token gratuito (registro no portal de APIs)"
   resolucao_espacial: "0.01 ou 0.1 grau (4wings report); flexivel por regiao"
   resolucao_temporal: "diaria (agregavel)"
