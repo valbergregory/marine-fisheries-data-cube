@@ -184,7 +184,8 @@ mfdc_export_overleaf <- function(models, dyn, spill, rob, alt, het, quality,
   # esqueleto e declaracoes acompanham o pacote (prosa e do autor)
   file.copy(c("article/main.tex", "article/references.bib",
               "article/references_candidates.bib",
-              "article/ai_disclosure.tex", "article/data_code_availability.tex"),
+              "article/ai_disclosure.tex", "article/data_code_availability.tex",
+              "article/declarations.tex", "article/highlights.tex"),
             out_dir, overwrite = TRUE)
   files <- c(list.files(out_dir, recursive = TRUE, full.names = TRUE))
   mfdc_log(sprintf("Overleaf: %d arquivos em %s", length(files), out_dir),
