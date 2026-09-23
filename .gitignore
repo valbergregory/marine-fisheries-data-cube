@@ -66,6 +66,9 @@ outputs/overleaf/
 outputs/overleaf_*.zip
 outputs/manuscript_draft_*.pdf
 
+# --- Texto-modelo de apoio (IA) — NUNCA versionar ---
+_texto-apoio-autor/
+
 # --- Texto do artigo (local; nao versionado). Publicar apenas o PDF final em artigo/ ---
 overleaf/
 article/
