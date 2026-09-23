@@ -1,44 +1,41 @@
-# Plano das próximas etapas (2026-09-03)
+# RETOMAR AQUI — estado e próximos passos
 
-## Bloqueio único para o piloto
+Atualizado em 2026-09-22. Histórico completo das decisões em
+[decisions_log.md](decisions_log.md) (D1–D20); números correntes em
+`outputs/tables/RESULTS_DIGEST.md`; comandos em [RUNBOOK.md](RUNBOOK.md).
 
-- [ ] **Valber:** criar conta e token na Global Fishing Watch
-  (<https://globalfishingwatch.org/our-apis/>) e salvar em `.Renviron`
-  na raiz do projeto: `GFW_TOKEN=...` (arquivo já ignorado pelo Git).
+## Estado: a parte técnica está fechada
 
-## Fase 1 — Viabilidade (1–2 sessões)
+| Bloco | Situação |
+|---|---|
+| Cubo de dados (2013–2024, 4.765 células, 686.160 células-mês) | pronto, auditado, Parquet + DuckDB |
+| Modelos, dinâmica, deslocamento, heterogeneidade, robustez, placebos | estimados; 12 tabelas, 5 figuras |
+| Limiares sob tendências por célula (D20) | ≥20 dias sobrevive; ≥30 dias também |
+| Testes automatizados | suíte `testthat` cobrindo esquema, chaves, MHW, joins |
+| Termos da API GFW | lidos: **CC BY-NC 4.0** (não BY-SA); docs e LICENSING corrigidos |
+| Dashboard Shiny | `app/app.R` funcional (período, região, esforço, MHW, anomalias, exportação) |
 
-1. Instalar dependências espaciais (Background Job:
-   `scripts/00b_install_dependencies.R`) — sf, terra, exactextractr,
-   h3jsr*, heatwaveR, arrow, duckdb, gfwr (GitHub, pinado).
-   *Se `h3jsr` falhar no Windows, fallback documentado: grade 0,25°.
-2. Rodar `scripts/01_test_data_access.R` (Background Job) — valida token
-   GFW com consulta mínima + baixa 1 dia de OISST + malha IBGE.
-3. Rodar `scripts/02_run_feasibility.R` (Background Job) — piloto NE
-   2022–2023, mensal, ≤400 células; preenche as 10 perguntas do
-   `docs/feasibility_report.md`.
-4. **Revisão do pesquisador:** aprovar/restringir/reformular (regra de
-   decisão no relatório). ⛔ Nada de download completo antes disso.
+## O que depende do pesquisador (bloqueia a submissão)
 
-## Fase 2 — Cubo de dados (após aprovação)
+   o que sobreviver dele precisa constar da declaração de IA
+   brasileiros (último boletim do MPA; história institucional do MPA; regime
+   de gestão compartilhada e Decreto 6.981/2009; Lei 10.779/2003 e
+   elegibilidade do Seguro-Defeso; filiação à ICCAT e portos da frota de
+   espinhel; base legal e limiar do PREPS) e duas afirmações que pedem
+   evidência do autor.
+3. **Aprovar ou remover as 11 referências candidatas**
+   (`article/references_candidates.bib`). Os DOIs foram verificados na
+   Crossref, mas o autor ainda não leu os textos; a política do portfólio
+4. **Escolher o título.** A clorofila saiu do escopo (D18), então
+   "Ocean Productivity" no título atual não se sustenta. Alternativas no
+5. **Escolher o periódico-alvo** (Marine Policy, Fisheries Research,
+   Ecological Economics, ICES JMS) — eu adapto classe e bibliografia.
+6. **Preencher os colchetes** de `article/data_code_availability.tex`
+   (tag/commit do release, datas de acesso) e a versão do aplicativo em
 
-5. Decidir unidade de análise (D2) com números do piloto.
-6. Downloads completos com checksums + linhagem (targets).
-7. Climatologia 1991–2020 + eventos MHW (heatwaveR) para toda a costa.
-8. Painel célula×mês em Parquet + consultas DuckDB + validação
-   (testthat + validate) + relatório de auditoria.
+## O que posso fazer quando o pesquisador quiser
 
-## Fase 3 — Análise
-
-9. Descritivas e mapas; revisão de literatura sistematizada (Related
-   Literature) com citações verificadas via Crossref.
-10. Modelos principais (fixest, Conley), dinâmica (lags/DLNM),
-    deslocamento espacial, robustez (lista da seção 11 do protocolo).
-
-## Fase 4 — Produtos
-
-11. Protótipo Shiny (após dados/modelos validados).
-12. Estudo EN (Marine Policy / Fisheries Research / Ecological
-    Economics / ICES JMS) + delimitação da versão SBSI (contribuição de SI
-    distinta — sem submissão duplicada; diferenças registradas em
-    `article/`).
+- Versão de Sistemas de Informação (SBSI) com pergunta e contribuição
+  distintas, sem submissão duplicada (seção 16 do protocolo).
+- Publicar o dashboard (shinyapps.io ou container) respeitando o BY-NC.
+- Release no GitHub com DOI (Zenodo) no dia da submissão.
