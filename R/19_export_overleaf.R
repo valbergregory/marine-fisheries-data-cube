@@ -147,7 +147,11 @@ mfdc_numbers_tex <- function(models, dyn, spill, rob, alt, het, quality,
         bGeTwentyCT = tg("ge20_celltrend", "mhw_ge20"), pGeTwentyCT = tg("ge20_celltrend", "mhw_ge20", "p", 3),
         bGeThirtyCT = tg("ge30_celltrend", "mhw_ge30"), pGeThirtyCT = tg("ge30_celltrend", "mhw_ge30", "p", 3),
         bBinTwentyPlusCT = tg("bins_celltrend", "d20p"), pBinTwentyPlusCT = tg("bins_celltrend", "d20p", "p", 3),
-        shareGeThirty = formatC(100 * extra$thresholds$counts[threshold == 30, share][1], format = "f", digits = 1))) }
+        shareGeThirty = formatC(100 * extra$thresholds$counts[threshold == 30, share][1], format = "f", digits = 1),
+        shareGeTwenty = formatC(100 * extra$thresholds$counts[threshold == 20, share][1], format = "f", digits = 1),
+        pctGeTwenty   = formatC(100 * (exp(as.numeric(tg("ge20_base", "mhw_ge20"))) - 1), format = "f", digits = 1),
+        pctGeTwentyCT = formatC(100 * (exp(as.numeric(tg("ge20_celltrend", "mhw_ge20"))) - 1), format = "f", digits = 1),
+        pctGeThirtyCT = formatC(100 * (exp(as.numeric(tg("ge30_celltrend", "mhw_ge30"))) - 1), format = "f", digits = 1))) }
     if (!is.null(extra$moran)) num <- c(num, list(
       moranI      = formatC(extra$moran$moran_I[1], format = "f", digits = 4),
       pMoran      = formatC(extra$moran$p_perm[1], format = "f", digits = 3)))
@@ -179,6 +183,7 @@ mfdc_export_overleaf <- function(models, dyn, spill, rob, alt, het, quality,
                            extra = extra_numbers)
   # esqueleto e declaracoes acompanham o pacote (prosa e do autor)
   file.copy(c("article/main.tex", "article/references.bib",
+              "article/references_candidates.bib",
               "article/ai_disclosure.tex", "article/data_code_availability.tex"),
             out_dir, overwrite = TRUE)
   files <- c(list.files(out_dir, recursive = TRUE, full.names = TRUE))
