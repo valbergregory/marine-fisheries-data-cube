@@ -1,0 +1,9 @@
+﻿{
+    "sampling_ms":  500,
+    "exit_code":  null,
+    "source":  "System.Diagnostics.Process.PeakWorkingSet64",
+    "stage":  "netio",
+    "rscript":  "C:\\Program Files\\R\\R-4.4.3\\bin\\Rscript.exe",
+    "wall_seconds":  18.1,
+    "peak_working_set_mb":  10.6
+}

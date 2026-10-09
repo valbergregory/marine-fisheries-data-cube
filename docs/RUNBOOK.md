@@ -66,8 +66,22 @@ shiny::runApp("app")
 Agregados célula × ano e região × mês, sob CC BY-NC 4.0 com a atribuição da
 GFW no rodapé e no CSV baixado ([gfw_api_terms.md](gfw_api_terms.md)).
 
-## 6. Estado do projeto
+## 6. Medir o custo computacional
 
-Decisões numeradas em [decisions_log.md](decisions_log.md) (D1–D21);
+```powershell
+powershell -File scripts/95_measure_cost.ps1 -Stage netio      # vazão de download
+powershell -File scripts/95_measure_cost.ps1 -Stage ingest     # cubo, recorte, MHW
+powershell -File scripts/95_measure_cost.ps1 -Stage analysis   # cadeia de estimação
+```
+
+O invólucro de PowerShell existe porque o pico de memória tem de vir do SO:
+`Rscript.exe` é só um lançador e o trabalho roda no processo filho. Resultados
+e método em [cost_profile.md](cost_profile.md). **Não editar
+`scripts/95_measure_cost.R` com uma execução em curso**: o `Rscript` lê o
+arquivo em fluxo e a edição quebra a análise sintática na metade.
+
+## 7. Estado do projeto
+
+Decisões numeradas em [decisions_log.md](decisions_log.md) (D1–D26);
 viabilidade em [feasibility_report.md](feasibility_report.md);
 próximos passos em [next_steps.md](next_steps.md).

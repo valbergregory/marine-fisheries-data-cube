@@ -31,5 +31,22 @@ Observations                     686,160            686,160             686,160
 Squared Cor.                     0.50691            0.50691             0.50868
 Pseudo R2                        0.73454            0.73454             0.73474
 BIC                         15,520,953.8       15,520,953.8        15,509,086.8
+
+                                 model 7             model 8
+Dependent Var.:                    hours               hours
+                                                            
+mhw_days             -0.0123*** (0.0033) -0.0102*** (0.0029)
+sst_anom               0.1249** (0.0391)  0.1596*** (0.0413)
+Fixed-Effects:       ------------------- -------------------
+cell                                 Yes                 Yes
+month                                Yes                 Yes
+region-month_of_year                 Yes                 Yes
+region-year                           No                  No
+____________________ ___________________ ___________________
+S.E. type                 Conley (200km)      Conley (200km)
+Observations                     686,160             686,160
+Squared Cor.                     0.50758             0.50746
+Pseudo R2                        0.73467             0.73457
+BIC                         15,513,354.8        15,519,172.0
 ---
 Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1

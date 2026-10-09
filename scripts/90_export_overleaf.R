@@ -17,6 +17,16 @@ local({
   on.exit(mfdc_log("== FIM ==", file = log_file), add = TRUE)
   targets::tar_make(names = c("results_digest", "overleaf"), reporter = "timestamp")
   zipf <- file.path("outputs", sprintf("overleaf_%s.zip", format(Sys.Date(), "%Y%m%d")))
+  # Compilar localmente em outputs/overleaf deixa .aux/.log/.pdf etc. na pasta;
+  # sem esta limpeza eles entram no pacote (o zip de 09/10 saltou de 0,6 para
+  # 1,4 MB por isso). O Overleaf recebe fontes, nao artefatos de build.
+  lixo <- list.files("outputs/overleaf", full.names = TRUE,
+                     pattern = "[.](aux|log|blg|bbl|out|spl|toc|fls|fdb_latexmk|synctex[.]gz|pdf)$")
+  if (length(lixo)) unlink(lixo)
+  # utils::zip ATUALIZA um arquivo existente em vez de recriá-lo: sem este
+  # unlink, entradas de execucoes anteriores do mesmo dia sobrevivem dentro do
+  # pacote (inclusive arquivos que deixaram de existir na pasta).
+  if (file.exists(zipf)) unlink(zipf)
   old <- setwd("outputs/overleaf")
   utils::zip(file.path("..", "..", zipf), list.files(".", recursive = TRUE))
   setwd(old)

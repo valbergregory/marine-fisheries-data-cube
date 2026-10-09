@@ -1,0 +1,32 @@
+﻿{
+    "samples":  1233,
+    "source":  "Win32_Process.PeakWorkingSetSize, arvore de processos",
+    "wall_seconds":  1074.1,
+    "sampling_ms":  500,
+    "peak_process_tree_sum_mb":  14795.6,
+    "rscript":  "C:\\Program Files\\R\\R-4.4.3\\bin\\Rscript.exe",
+    "peak_dominant_process_mb":  14580.1,
+    "stage":  "analysis",
+    "per_process_peak_mb":  [
+                                {
+                                    "proc":  "112024:Rscript.exe",
+                                    "mb":  10.6
+                                },
+                                {
+                                    "proc":  "26504:cmd.exe",
+                                    "mb":  13.6
+                                },
+                                {
+                                    "proc":  "34212:Rterm.exe",
+                                    "mb":  14580.1
+                                },
+                                {
+                                    "proc":  "68128:conhost.exe",
+                                    "mb":  12.4
+                                },
+                                {
+                                    "proc":  "109900:Rscript.exe",
+                                    "mb":  179
+                                }
+                            ]
+}

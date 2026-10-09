@@ -1,0 +1,38 @@
+{
+  "stage": "ingest",
+  "started_at": "2026-10-09T18:53:44-0300",
+  "r_version": "R version 4.4.3 (2025-02-28 ucrt)",
+  "machine": {
+    "os": "Windows",
+    "release": "10 x64",
+    "cores": 20
+  },
+  "cube": {
+    "seconds": 5.4,
+    "user_seconds": 4.7,
+    "r_max_used_mb": 2403.7,
+    "n_pixels": 12005,
+    "n_days": 12419,
+    "object_mb": 1137.5627
+  },
+  "crop_one_year": {
+    "seconds": 6.44,
+    "user_seconds": 5.39,
+    "r_max_used_mb": 1399.1,
+    "year": 2024,
+    "global_file_mb": 448.8627,
+    "n_years_total": 34,
+    "implied_total_seconds": 218.96
+  },
+  "mhw_one_block": {
+    "seconds": 80.16,
+    "user_seconds": 76.04,
+    "r_max_used_mb": 1424.1,
+    "pixels_per_block": 250,
+    "n_blocks_total": 49,
+    "implied_total_seconds": 3927.84,
+    "note": "4 definicoes de MHW sao estimadas (principal + 3 robustez)"
+  },
+  "mhw_all_definitions_implied_seconds": 15711.36,
+  "finished_at": "2026-10-09T18:55:17-0300"
+}

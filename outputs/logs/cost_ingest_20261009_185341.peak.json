@@ -1,0 +1,24 @@
+﻿{
+    "samples":  111,
+    "source":  "Win32_Process.PeakWorkingSetSize, arvore de processos",
+    "wall_seconds":  96.3,
+    "sampling_ms":  500,
+    "peak_process_tree_sum_mb":  2503.4,
+    "rscript":  "C:\\Program Files\\R\\R-4.4.3\\bin\\Rscript.exe",
+    "peak_dominant_process_mb":  2479.4,
+    "stage":  "ingest",
+    "per_process_peak_mb":  [
+                                {
+                                    "proc":  "73520:Rscript.exe",
+                                    "mb":  2479.4
+                                },
+                                {
+                                    "proc":  "26384:Rscript.exe",
+                                    "mb":  10.6
+                                },
+                                {
+                                    "proc":  "72620:cmd.exe",
+                                    "mb":  13.4
+                                }
+                            ]
+}

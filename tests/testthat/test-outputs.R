@@ -38,8 +38,12 @@ test_that("numbers.tex: sem valores faltantes e cobre toda macro usada no main.t
   expect_false(any(grepl("missing|^NA$|^NaN$|^$", vals)), info = paste(defs[grepl("missing|^NA$|^NaN$|^$", vals)], collapse = ", "))
   tex <- paste(readLines(mf, encoding = "UTF-8"), collapse = "\n")
   used <- unique(regmatches(tex, gregexpr("(?<=\\\\)[A-Za-z]+(?=\\{\\})", tex, perl = TRUE))[[1]])
+  # Comandos do LaTeX/elsarticle que tambem aparecem como \nome{}: nao sao
+  # macros de numero. "author" entra em 2026-10-09 porque o ramo anonimo do
+  # manuscrito (revisao duplo-cega do Marine Policy, D26) usa \author{} vazio.
   latex_builtin <- c("today", "maketitle", "tableofcontents", "centering", "par",
-                     "newpage", "clearpage", "appendix", "noindent", "LaTeX", "TeX")
+                     "newpage", "clearpage", "appendix", "noindent", "LaTeX", "TeX",
+                     "author")
   undefined <- setdiff(used, c(defs, latex_builtin))
   expect_equal(undefined, character(0))
 })

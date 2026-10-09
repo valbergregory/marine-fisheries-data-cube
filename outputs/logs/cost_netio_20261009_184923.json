@@ -1,0 +1,20 @@
+{
+  "stage": "netio",
+  "started_at": "2026-10-09T18:49:17-0300",
+  "r_version": "R version 4.4.3 (2025-02-28 ucrt)",
+  "machine": {
+    "os": "Windows",
+    "release": "10 x64",
+    "cores": 20
+  },
+  "netio": {
+    "ok": true,
+    "measured_mb": 64,
+    "seconds": 5.92,
+    "mb_per_s": 10.8108,
+    "total_gb_on_disk": 19.091,
+    "implied_download_seconds": 1808.2967,
+    "note": "vazao medida em uma requisicao de intervalo; total extrapolado"
+  },
+  "finished_at": "2026-10-09T18:49:23-0300"
+}

@@ -22,10 +22,17 @@ tar_option_set(
   seed = 20260903
 )
 
+# LOGF e caminho FIXO de proposito (D27, 2026-10-09). Antes era
+# pipeline_<AAAAMMDD_HHMMSS>.log, calculado a cada definicao do pipeline:
+# dezenas de alvos recebem LOGF no comando, o targets trata o objeto global
+# como dependencia, o hash mudava a cada execucao e o `tar_make` reconstruia a
+# cadeia inteira (~18 min) mesmo sem nada ter mudado — o oposto do que o
+# targets existe para fazer. O rastro por execucao nao se perde: cada linha
+# gravada por mfdc_log() carrega o proprio horario, e o arquivo e aberto em
+# modo append.
 LOGF <- {
   dir.create("outputs/logs", showWarnings = FALSE, recursive = TRUE)
-  file.path("outputs", "logs",
-            sprintf("pipeline_%s.log", format(Sys.time(), "%Y%m%d_%H%M%S")))
+  file.path("outputs", "logs", "pipeline.log")
 }
 
 list(
@@ -204,7 +211,8 @@ list(
       mfdc_tex_models(celltrend$summaries, "outputs/tables/tab11_cell_trends.tex",
         "Cell-specific linear trends: main effect, 12-month lead placebo and lags",
         "tab:celltrend",
-        notes = "Varying slopes cell x linear time. Conley SE (200 km)."),
+        notes = "Varying slopes cell x linear time. Conley SE (200 km).",
+        fontsize = "footnotesize"),
       mfdc_write_tex_table(thresholds$coefs[grepl("^mhw_ge|mhw_bin", term),
         .(model, term, b = round(b, 4), se = round(se, 4), p = round(p, 4))],
         "outputs/tables/tab12_thresholds.tex",

@@ -2,11 +2,16 @@
 # Regra do projeto: numeros do artigo NUNCA sao digitados a mao; o .tex e
 # incluido no manuscrito (\input{}) e a prosa e escrita pelo autor.
 
+# fontsize: as tabelas longas de regressao (dinamica, heterogeneidade e
+# tendencias por celula) excediam a altura da pagina em 44, 87 e 62 pt
+# ("Float too large for page"), medido em 2026-10-09. "small" resolve as duas
+# menores; a de heterogeneidade precisa de "footnotesize".
 mfdc_tex_models <- function(sums, file, title, label, notes = NULL,
-                            dict = NULL) {
+                            dict = NULL, fontsize = "small") {
   if (file.exists(file)) unlink(file)
   fixest::etable(sums, tex = TRUE, file = file, replace = TRUE,
                  title = title, label = label, notes = notes,
+                 fontsize = fontsize,
                  dict = c(hours = "Fishing hours",
                           effort_present = "Any effort (0/1)",
                           mhw_days = "MHW days",
@@ -35,13 +40,15 @@ mfdc_build_tables <- function(models, dyn, spill, rob, alt, het, desc,
     notes = "Conley standard errors (200 km). Associational estimates; see identification strategy."))
   f <- c(f, mfdc_tex_models(dyn$summaries,
     file.path(dir_tables, "tab03_dynamics.tex"),
-    "Dynamic specification: leads (placebo) and lags", "tab:dyn"))
+    "Dynamic specification: leads (placebo) and lags", "tab:dyn",
+    fontsize = "footnotesize"))
   f <- c(f, mfdc_tex_models(spill$summaries,
     file.path(dir_tables, "tab04_spillovers.tex"),
     "Spatial displacement: neighbourhood exposure by distance ring", "tab:spill"))
   f <- c(f, mfdc_tex_models(het$summaries,
     file.path(dir_tables, "tab05_heterogeneity.tex"),
-    "Heterogeneity by region, gear type and distance to coast", "tab:het"))
+    "Heterogeneity by region, gear type and distance to coast", "tab:het",
+    fontsize = "footnotesize"))
   f <- c(f, mfdc_tex_models(c(rob$summaries, lapply(alt, `[[`, "summary")),
     file.path(dir_tables, "tab06_robustness.tex"),
     "Robustness: grid resolution, trends, sample, Conley cutoffs and MHW definition",
